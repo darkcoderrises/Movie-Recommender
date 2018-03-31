@@ -51,6 +51,11 @@ class UserProfile(User):
     phone = models.CharField(default="", max_length=10)
     genre_pref = models.ManyToManyField(Genre)
 
+class TheaterOwner(User):
+    age = models.IntegerField(default=0)
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
+    phone = models.CharField(default="", max_length=10)
+
 class Crew(models.Model):
     profile = models.ForeignKey(CrewProfile, on_delete=models.CASCADE)
     role = models.ForeignKey(CastType, on_delete=models.CASCADE)
@@ -67,6 +72,7 @@ class Movie(models.Model):
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     crew = models.ManyToManyField(Crew)
     genres = models.ManyToManyField(Genre)
+    
 
     def __str__(self):
         return self.title
@@ -85,6 +91,7 @@ class Theater(models.Model):
     location_lat = models.FloatField(default=0)
     location_long = models.FloatField(default=0)
     seat_types = models.ManyToManyField(SeatType)
+    owner=models.ForeignKey(TheaterOwner,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

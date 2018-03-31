@@ -16,8 +16,10 @@ from django.shortcuts import render
 from .filters import UserFilter
 #import django_filters
 from itertools import chain
-from .forms import UserProfileCreationForm
+from .forms import UserProfileCreationForm,TheaterOwnerCreationForm
 from django.core.exceptions import ViewDoesNotExist
+from django.conf import settings
+from django.shortcuts import redirect
 
 # Create your views here.
 
@@ -60,6 +62,20 @@ def signup(request):
         form = UserProfileCreationForm()
     return render(request, 'signup.html', {'form': form})
 
+def signup_theaterowner(request):
+    if request.method == 'POST':
+        form = TheaterOwnerCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = TheaterOwnerCreationForm()
+    return render(request, 'signup_theaterowner.html', {'form': form})
+
 def search(request):
     movie_list = Movie.objects.all()
     #for movie in movie_list:
@@ -68,6 +84,12 @@ def search(request):
     movie_filter = UserFilter(request.GET, queryset=movie_list)
     #print(movie_filter.qs)
     return render(request, 'movie_list.html', {'filter': movie_filter})
+
+
+def my_view(request):
+    if not request.user.is_authenticated:
+        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+    return redirect('home')
 
 
 def show_movies(request):

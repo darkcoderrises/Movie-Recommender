@@ -28,6 +28,7 @@ urlpatterns = [
     path(r'admin/', admin.site.urls),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
+    url(r'^signup_theaterowner/$', core_views.signup_theaterowner, name='signup_theaterowner'),
     url(r'^signup/$', core_views.signup, name='signup'),
     url(r'^accounts/profile/$', RedirectView.as_view(url='/default/', permanent=False)),
     url(r'^search/$', core_views.search, name='search'),
