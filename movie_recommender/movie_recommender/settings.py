@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'haystack',
     'corsheaders',
     'celery',
+    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,7 @@ DATABASES = {
     }
 }
 
+TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
