@@ -14,7 +14,6 @@ django-pandas==0.5.1
 djangorestframework==3.7.7
 funcy==1.10.1
 future==0.16.0
-haystack==0.42
 Jinja2==2.10
 joblib==0.11
 kombu==4.1.0
@@ -43,3 +42,4 @@ Whoosh==2.7.4
 celery==4.1.0
 redis==2.10.6
 django-celery==3.2.2
+django-crispy-forms==1.7.2
