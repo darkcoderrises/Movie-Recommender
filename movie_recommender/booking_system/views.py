@@ -24,7 +24,7 @@ from django.core.exceptions import ViewDoesNotExist
 from functors.booker import Booker
 from functors.recommender import PopularRecommender, CBRecommender
 from django.conf import settings
-from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 
@@ -185,7 +185,15 @@ def proceed(request):
 
 def movie(request, movie_id):
     try:
-        _movie = Movie.objects.get(pk=movie_id)
+        movie = Movie.objects.get(pk=movie_id)
+        theater_wise = {}
+        for show in movie.show_set:
+            theater_show = show.screen.theater
+            theater_wise[theater_show] = theater_wise.get(theater_show, [])
+            theater_wise[theater_show].append(show.show_time)
+
+        print (theater_wise)
+
         return render(request, 'movie.html', {"movie": _movie})
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
