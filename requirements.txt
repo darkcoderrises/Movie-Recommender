@@ -40,3 +40,6 @@ six==1.11.0
 surprise==0.1
 vine==1.1.4
 Whoosh==2.7.4
+celery==4.1.0
+redis==2.10.6
+django-celery==3.2.2
