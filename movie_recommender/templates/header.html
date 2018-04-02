@@ -1,36 +1,103 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="/">Movies</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="/">Movies</a>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/running">Nearby You<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/upcoming">Upcoming</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0" action="/search"
-                                               method="get">
-            <input class="form-control mr-sm-2" type="search"
-                                                placeholder="Search"
-                                                aria-label="Search"
-                                                name="q">
-            <select multiple name="models" style="display:none">
-                <option value="booking_system.crewprofile" selected>Crew</option> 
-                <option value="booking_system.genre" selected>Genre</option> 
-                <option value="booking_system.movie" selected>Movie</option> 
-                <option value="booking_system.theater" selected>Theater</option> 
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/running">Nearby You<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/upcoming">Upcoming</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0" action="/search"
+    method="get">
+    <input class="form-control mr-sm-2" type="search"
+    placeholder="Search"
+    aria-label="Search"
+    name="q">
+    <select multiple name="models" style="display:none">
+      <option value="booking_system.crewprofile" selected>Crew</option>
+      <option value="booking_system.genre" selected>Genre</option>
+      <option value="booking_system.movie" selected>Movie</option>
+      <option value="booking_system.theater" selected>Theater</option>
+    </select>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
 
-            <!-- 
-                    http://localhost:8000/search/?q=Something&models=booking_system.crewprofile&models=booking_system.genre&models=booking_system.movie&models=booking_system.theater
-            -->
+  <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown nav-item">
+      <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-user"></span> 
+        {% if user.is_authenticated %}
+          <strong>{{user.first_name}}</strong>
+        {% else %}
+          <strong>Login</strong>
+        {% endif %}
+        <span class="glyphicon glyphicon-chevron-down"></span>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        {% if user.is_authenticated %}
+        <li>
+          <div class="navbar-login">
+            <div class="row">
+              <div class="col-lg-4">
+                <p class="text-center">
+                  <span class="glyphicon glyphicon-user icon-size"></span>
+                </p>
+              </div>
+              <div class="col-lg-8">
+                <p class="text-left"><strong>{{user.first_name}} {{user.last_name}}</strong></p>
+                <p class="text-left small">{{user.email}}</p>
+                <p class="text-left">
+                  <a href="#" class="btn btn-primary btn-block btn-sm">Edit Profile</a>
+                </p>
+              </div>
+            </div>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <div class="navbar-login navbar-login-session">
+            <div class="row">
+            </div>
+              <div class="col-lg-12">
+                <p>
+                  <a href="#" class="btn btn-danger btn-block">Logout</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </li>
+        {% else %}
+        <li>
+          <div class="navbar-login navbar-login-session">
+            <div class="row">
+              <div class="col-lg-12">
+                <p>
+                  <a href="#" class="btn btn-danger btn-block">Login</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </li>
 
-            </select>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        <li class="divider"></li>
+
+        <li>
+          <div class="navbar-login navbar-login-session">
+            <div class="row">
+              <div class="col-lg-12">
+                <p>
+                  <a href="#" class="btn btn-danger btn-block">Sign Up</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
     </div>
-</nav>
+  </nav>
