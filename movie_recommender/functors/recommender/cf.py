@@ -17,9 +17,9 @@ class CFRecommender:
         evaluate(svd, data, measures=['RMSE', 'MAE'])
         trainset = data.build_full_trainset()
         svd.train(trainset)
-        for user in ratings['user__id']:
-            for movie in ratings['movie__id']:
-                print(svd.predict(user, movie, 3))
+        for user in ratings['user__id'].unique():
+            for movie in ratings['movie__id'].unique():
+                print(svd.predict(user, movie))
 
 
 
