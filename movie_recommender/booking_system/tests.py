@@ -68,7 +68,4 @@ class TestConcurrency(TestCase):
                 last_run = user_id
 
         check_race_condition()
-
-        print (last_run)
-        for i in Booking.objects.all():
-            print (i.invoice.status)
+        assert Booking.objects.filter(pk=bookings[last_run]).count() == 0
