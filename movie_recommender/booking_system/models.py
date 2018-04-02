@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+#import datetime
 
 
 class CastType(models.Model):
@@ -48,13 +49,15 @@ class Genre(models.Model):
         return self.genre
 
 
-class UserProfile(User):
-    #user = models.OneToOneField(User, on_delete=models.CASCADE)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField(default=0)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
     phone = models.CharField(default="", max_length=10)
     genre_pref = models.ManyToManyField(Genre)
 
+    def __str__(self):
+        return self.user.__str__()
 
 class Crew(models.Model):
     profile = models.ForeignKey(CrewProfile, on_delete=models.CASCADE)
@@ -76,6 +79,7 @@ class Movie(models.Model):
     release_date = models.DateField()
     tagline = models.TextField(default="")
     imdb_id = models.CharField(unique=True, max_length=20)
+    
 
     def __str__(self):
         return self.title
@@ -87,12 +91,6 @@ class SeatType(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class TheaterOwner(User):
-    age = models.IntegerField(default=0)
-    gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
-    phone = models.CharField(default="", max_length=10)
 
 class City(models.Model):
     name = models.CharField(max_length=100, default="")

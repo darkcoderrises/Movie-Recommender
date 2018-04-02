@@ -125,7 +125,8 @@ class Command(BaseCommand):
         keys = ['first_name', 'last_name', 'username']
         params = self.mapping(dict(zip(keys, keys)), user)
         gender = self.get(M.Gender, name=user['gender'])
-        return self.get(M.UserProfile, **params, gender=gender)
+        user_obj = self.get(M.User, **params)
+        return self.get(M.UserProfile, user=user_obj, gender=gender)
 
     def _genres(self, movie, mf):
         serialized_genre = mf["genres"]
