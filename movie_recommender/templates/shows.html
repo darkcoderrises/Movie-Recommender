@@ -1,16 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for show in shows%}
 <div class = "card">
 	<div class="card-body">
 		<div class="row">
-			<div class="col-sm-4">
+			<div class="card-columns">
 				<div class="card">
-					<!-- <img class="card-img-top" src="/static/images/movie.png" alt="Card image cap"> -->
 					<div class="card-body">
 						<div class="row">
-							<h3 class="card-title"> <strong>{{show.screen}}</strong> </h3>
+							<h3 class="card-title"> <strong>{{movie.title}}</strong> </h3>
+						</div>
+						<div class = "row">
+							<h5 class="card-title"> <strong>Language : </strong> </h5>
+							<h5 class="card-title"> {{movie.language}} </h5>
+						</div>
+						<div class = "row">
+							<h5 class="card-title"> <strong>Genre : </strong> </h5>
+							{%for g in movie.genres.all%}
+							<h5 class="card-title"> <span style = "padding-right: 10px;">{{g }} </span> </h5>
+							{%endfor%}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% for key, values in timings.items %}
+<div class = "card">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<h3 class="card-title"> <strong>{{key}}</strong> </h3>
 						</div>
 					</div>
 				</div>
@@ -19,18 +43,11 @@
 				<div class="card">
 					<div class="card-body">
 						<div class = "row">
+							{%for time in values%}
 							<div class = "col-sm-3">
-								<h4>{{show.show_time}}</h4>
+								<h4><span style='border:1.5px black solid; font-size:25px;'>{{time}}</span></h4>
 							</div>
-							<!-- <div class = "col-sm-3">
-								<h4>{{show.show_time}}</h4>
-							</div>
-							<div class = "col-sm-3">
-								<h4>{{show.show_time}}</h4>
-							</div>
-							<div class = "col-sm-3">
-								<h4>{{show.show_time}}</h4>
-							</div> -->
+							{%endfor%}
 						</div>
 					</div>
 				</div>
