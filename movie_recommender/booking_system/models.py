@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+#import datetime
 
 
 class CastType(models.Model):
@@ -46,13 +47,13 @@ class Genre(models.Model):
 
 
 class UserProfile(User):
-    age = models.IntegerField(default=0)
+    #dob = models.DateField(default=datetime.date.today)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
     phone = models.CharField(default="", max_length=10)
     genre_pref = models.ManyToManyField(Genre)
 
 class TheaterOwner(User):
-    age = models.IntegerField(default=0)
+    #age = models.IntegerField(default=0)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
     phone = models.CharField(default="", max_length=10)
 

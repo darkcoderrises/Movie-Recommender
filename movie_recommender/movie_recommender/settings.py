@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'booking_system',
     'django_extensions',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -131,4 +132,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+LOGIN_REDIRECT_URL = 'index'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

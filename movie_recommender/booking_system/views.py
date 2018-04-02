@@ -1,13 +1,13 @@
 from rest_framework import generics
 from .serializers import CrewSerializer, CrewProfile, MovieSerializer, Movie, Crew
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from jinja2 import Environment
 from django.template.loader import render_to_string
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.core import serializers
 import json
 #from booking_system.models import Genre
@@ -16,10 +16,13 @@ from django.shortcuts import render
 from .filters import UserFilter
 #import django_filters
 from itertools import chain
-from .forms import UserProfileCreationForm,TheaterOwnerCreationForm
+from .forms import UserProfileCreationForm,TheaterOwnerCreationForm,UpdateProfile
+#from .forms import LoginForm
 from django.core.exceptions import ViewDoesNotExist
 from django.conf import settings
-from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required 
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView
 
 # Create your views here.
 
@@ -48,6 +51,33 @@ def environment(**options):
 #     serializer_class = MovieSerializer
 
 
+#class LoginView(FormView):
+#    success_url = reverse_lazy('home')
+#    template_name = 'login.html'
+#
+#    def form_valid(self, form):
+#        username = form.cleaned_data['username']
+#        user = authenticate(username=username, password=password)
+
+#        if user is not None and user.is_active:
+#            login(self.request, user)
+#            return super(LoginView, self).form_valid(form)
+#            return self.form_invalid(form)
+
+#def login(request):
+#    if request.method == 'POST':
+#        form = LoginForm(request.POST)
+#        if form.is_valid():
+#            form.save()
+#            username = form.cleaned_data.get('username')
+#            raw_password = form.cleaned_data.get('password1')
+#            user = authenticate(username=username, password=raw_password)
+#            login(request, user)
+#            return redirect('index')
+#    else:
+#        form = LoginForm()
+#    return render(request, 'login.html', {'form': form})
+
 def signup(request):
     if request.method == 'POST':
         form = UserProfileCreationForm(request.POST)
@@ -57,7 +87,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('index')
     else:
         form = UserProfileCreationForm()
     return render(request, 'signup.html', {'form': form})
@@ -71,7 +101,7 @@ def signup_theaterowner(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('index')
     else:
         form = TheaterOwnerCreationForm()
     return render(request, 'signup_theaterowner.html', {'form': form})
@@ -86,10 +116,22 @@ def search(request):
     return render(request, 'movie_list.html', {'filter': movie_filter})
 
 
-def my_view(request):
-    if not request.user.is_authenticated:
-        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-    return redirect('home')
+@login_required
+def update_profile(request):
+    args = {}
+
+    if request.method == 'POST':
+        form = UpdateProfile(request.POST, instance=request.user)
+        form.actual_user = request.user
+        if form.is_valid():
+            form.save()
+            #return HttpResponseRedirect(reverse('update_profile_success'))
+            return redirect('index')
+    else:
+        form = UpdateProfile()
+
+    args['form'] = form
+    return render(request, 'update_profile.html', args)
 
 
 def show_movies(request):

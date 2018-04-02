@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+
 {% block content %}
-  <h2>Sign up</h2>
+  <h2>Profile Update</h2>
   <form method="post">
     {% csrf_token %}
     {% crispy form form.helper %}
