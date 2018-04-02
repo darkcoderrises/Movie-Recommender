@@ -187,7 +187,7 @@ def movie(request, movie_id):
     try:
         movie = Movie.objects.get(pk=movie_id)
         theater_wise = {}
-        for show in movie.show_set:
+        for show in movie.show_set.all():
             theater_show = show.screen.theater
             theater_wise[theater_show] = theater_wise.get(theater_show, set())
             theater_wise[theater_show].append(show.show_time.strftime("%H:%S"))
