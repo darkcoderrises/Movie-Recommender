@@ -242,5 +242,5 @@ def shows(request, movie_id):
         theater_wise[theater] = sorted(timings)
     # print (theater_wise)
 
-    return render(request, 'shows.html', {"movie": movie,"timings": theater_wise})
+    return render_with_user(request, 'shows.html', {"movie": movie,"timings": theater_wise})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
