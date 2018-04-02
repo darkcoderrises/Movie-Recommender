@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import login
 from django.conf.urls import url
 from booking_system import views as core_views
+from booking_system import cviews 
 from django.views.generic import RedirectView
 #from movie_recommender.search import views
 
@@ -26,10 +28,13 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path(r'', include('booking_system.urls')),
     path(r'admin/', admin.site.urls),
-    url(r'^login/$', auth_views.login, name='login'),
+    #url(r'^login/$', core_views.login, name='login'),
+    #url(r'^login/$',auth_views.login, {'template_name': 'login.html'}),
+    url(r'^login/$', cviews.LoginView.as_view(), name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^signup/$', core_views.signup, name='signup'),
     url(r'^accounts/profile/$', RedirectView.as_view(url='/default/', permanent=False)),
     url(r'^search/', include('haystack.urls')),
+    url(r'^accounts/update/$', core_views.update_profile, name='update_user'),
 ]
 

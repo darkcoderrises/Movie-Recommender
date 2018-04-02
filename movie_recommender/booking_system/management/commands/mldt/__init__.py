@@ -11,13 +11,16 @@ files = [
     "movies_metadata.csv",
     "ratings.csv",
     "ratings_small.csv",
+    "names.csv",
+    "names_small.csv"
 ]
 
-def load(fdir):
+def load(fdir, debug):
     _export = {}
     for fname in files:
         key = fname.replace(".csv", "")
-        fname = '{}.small'.format(fname)
+        if debug:
+            fname = '{}.small'.format(fname)
         fpath = os.path.join(fdir, fname) 
         _export[key] = pd.read_csv(fpath)
     return _export
@@ -34,4 +37,19 @@ def director(crew):
         if member['job'] == 'Director':
             return member
     return None
+
+
+def users(udf):
+    csv_gender_map = dict([
+        ('f', 'Female'),
+        ('m', 'Male')
+    ])
+    ud = pd.DataFrame()
+    titlecase = lambda x: x.title()
+    gmap = lambda x: csv_gender_map[x]
+    ud['first_name'] = udf["first name"].apply(titlecase)
+    ud['last_name'] = udf["last name"].apply(titlecase)
+    ud['gender'] = udf["gender"].apply(gmap)
+    return ud
+
 

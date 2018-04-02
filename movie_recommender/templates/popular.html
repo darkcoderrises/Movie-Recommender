@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for movie in popular%}
+<div class = "card">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="card">
+					<!-- <img class="card-img-top" src="/static/images/movie.png" alt="Card image cap"> -->
+					<div class="card-body">
+						<div class="row">
+							<h3 class="card-title"> <strong><a href="../../movie/{{movie.id}}">{{movie.title}}</a></strong> </h3>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="card">
+					<div class="card-body">
+						<div class = "row">
+							<h3> <strong>Tagline :</strong> </h3>
+							<h3>{{movie.tagline}}</h3>
+						</div>
+						<div class = "row">
+							<h3> <strong>Releasing on :</strong> </h3>
+							<h3>{{movie.release_date}}</h3>
+						</div>
+						<div class = "row">
+							<h3> <strong>Language :</strong> </h3>
+							<h3>{{movie.language}}</h3>
+						</div>
+						<div class = "row">
+							<h3> <strong>Genre :</strong> </h3>
+							{%for g in movie.genres.all%}
+							<h3> <span style = "padding-right: 25px;">{{g }} </span> </h3>
+							{%endfor%}
+						</div>
+						<!-- <div class = "row">
+							<h3> <strong>Crew :</strong> </h3>
+							{%for c in movie.crew.all%}
+							<h3>{{c}},</h3>
+							{%endfor%}
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{%endfor%}
+{% endblock %}

@@ -43,9 +43,11 @@
 					<h5 class="card-title"><strong>Crew</strong></h5>
 				</div>
 				<div class="row">
+					<!-- <p> {{movie.crew.all}}</p> -->
 					{% for crew in movie.crew.all %}
 					<div class="col-sm-3">
 						<div class="card">
+							<h1> {{crew.id}} </h1>
 							<img class="card-img-top" src="/static/images/crew.png" alt="Card image cap">
 							<h5 class="text-center"> <a href="../../crew/{{crew.profile.id}}">{{crew.profile}}</a> </h5>
 						</div>
