@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'celery',
     'djcelery',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,5 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
+LOGIN_REDIRECT_URL = 'index'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for show in shows%}
+<div class = "card">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="card">
+					<!-- <img class="card-img-top" src="/static/images/movie.png" alt="Card image cap"> -->
+					<div class="card-body">
+						<div class="row">
+							<h3 class="card-title"> <strong>{{show.screen}}</strong> </h3>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="card">
+					<div class="card-body">
+						<div class = "row">
+							<div class = "col-sm-3">
+								<h4>{{show.show_time}}</h4>
+							</div>
+							<!-- <div class = "col-sm-3">
+								<h4>{{show.show_time}}</h4>
+							</div>
+							<div class = "col-sm-3">
+								<h4>{{show.show_time}}</h4>
+							</div>
+							<div class = "col-sm-3">
+								<h4>{{show.show_time}}</h4>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{%endfor%}
+{% endblock %}

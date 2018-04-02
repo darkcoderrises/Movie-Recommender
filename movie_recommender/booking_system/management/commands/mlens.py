@@ -19,6 +19,8 @@ gender_map = dict([
 ])
 
 
+
+
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
@@ -27,13 +29,29 @@ class Command(BaseCommand):
             help='File path',
         )
 
+        parser.add_argument('--debug', dest='debug', action='store_true')
+        parser.add_argument('--no-debug', dest='debug', action='store_false')
+        parser.set_defaults(debug=True)
+
+
     def handle(self, *args, **options):
+        self.debug = options['debug']
         self.seed(options['path'])
 
 
     def seed(self, path):
-        data = mldt.load(path)
+        data = mldt.load(path, self.debug)
         self.prototype(data)
+
+    def get(self, Model, **params):
+        try:
+            instance = Model.objects.get(**params)
+        except exceptions.ObjectDoesNotExist:
+            instance = Model.objects.create(**params)
+            instance.save()
+        return instance
+
+
 
     def mapping(self, _m, df):
         _d = {}
@@ -43,26 +61,22 @@ class Command(BaseCommand):
 
     def _movie(self, mf): 
         _mapping = {
+           "id": "id",
            "synopsis": "overview", 
            "tagline": "tagline" ,
            "title": "title",
            "release_date": "release_date",
            "imdb_id": "imdb_id",
+           "language": "original_language",
         }
 
 
         params = self.mapping(_mapping, mf)
-        try:
-            movie = M.Movie.objects.get(imdb_id=params["imdb_id"])
-
-        except exceptions.ObjectDoesNotExist:
-            lang = self._language(mf["original_language"])
-            movie = M.Movie.objects.create(**params, language=lang)
-
-            movie.save()
-            self._aggregate_rating(movie, mf)
-            self._genres(movie, mf)
-
+        params["language"] = self.get(M.Language,
+                lang=params["language"])
+        movie = self.get(M.Movie, **params)
+        self._aggregate_rating(movie, mf)
+        self._genres(movie, mf)
         return movie
 
     def _aggregate_rating(self, movie, mf):
@@ -72,10 +86,48 @@ class Command(BaseCommand):
                 "popularity": "popularity"
         }
         params = self.mapping(_mapping, mf)
-        rating = M.AggregateRating.objects.create(movie=movie,
-                **params)
-        rating.save()
+        rating = self.get(M.AggregateRating, **params, movie=movie)
     
+
+    def _genre(self, genre):
+        return self.get(M.Genre, genre=genre)
+
+    def _cast(self, cf):
+        pass
+
+    def _language(self, lang):
+        return self.get(M.Language, lang=lang)
+
+    def _gender(self, name):
+        return self.get(M.Gender, name=name)
+
+    def _crew_profile(self, profile):
+        _id = profile["gender"]
+        _gender = self._gender(gender_map[_id])
+        return self.get(M.CrewProfile, 
+            name=profile["name"], gender=_gender)
+
+    def _add_movie_crew(self, crew, movie):
+        try:
+            movie.crew.add(crew)
+            movie.save()
+        except exceptions.ObjectDoesNotExist:
+            raise
+            print("Deferring movie!")
+
+    def _cast_type(self, name):
+        return self.get(M.CastType, name=name)
+
+    def _crew(self, _profile, cast_type):
+        return self.get(M.Crew, profile=_profile, role=cast_type)
+
+    def _user(self, user):
+        keys = ['first_name', 'last_name', 'username']
+        params = self.mapping(dict(zip(keys, keys)), user)
+        gender = self.get(M.Gender, name=user['gender'])
+        user_obj = self.get(M.User, **params)
+        return self.get(M.UserProfile, user=user_obj, gender=gender)
+
     def _genres(self, movie, mf):
         serialized_genre = mf["genres"]
         genres = literal_eval(serialized_genre)
@@ -85,97 +137,54 @@ class Command(BaseCommand):
             _genres.append(_genre)
         movie.genres.set(_genres)
 
-    def _genre(self, genre):
-        _genre = None
-        try:
-            _genre = M.Genre.objects.get(genre=genre)
-        except exceptions.ObjectDoesNotExist:
-            _genre = M.Genre.objects.create(genre=genre)
-            _genre.save()
-        return _genre
 
-    def _cast(self, cf):
-        pass
-
-    def _language(self, lang):
-        try:
-            _lang = M.Language.objects.get(lang=lang)
-        except exceptions.ObjectDoesNotExist:
-            _lang = M.Language.objects.create(lang=lang)
-            _lang.save()
-        return _lang
-
-    def _gender(self, name):
-        try:
-            _gender = M.Gender.objects.get(name=name)
-        except exceptions.ObjectDoesNotExist:
-            _gender = M.Gender.objects.create(name=name)
-            _gender.save()
-        return _gender
-
-
-    def _crew_profile(self, profile):
-        try:
-            _profile = M.CrewProfile.objects.get(name=profile["name"])
-        except exceptions.ObjectDoesNotExist:
-            _id = profile["gender"]
-            _gender = self._gender(gender_map[_id])
-            print(profile["name"], gender_map[_id])
-            _profile = M.CrewProfile.objects.create(name=profile["name"],
-                    gender=_gender)
-            _profile.save()
-        return _profile
-
-    def _add_movie_crew(self, crew, movie_id):
-        try:
-            movie = M.Movie.objects.get(pk=movie_id)
-            movie.crew.add(crew)
-            movie.save()
-        except exceptions.ObjectDoesNotExist:
-            print("Deferring movie!")
-
-
-    def _casts(self, cast, movie_id):
+    def _casts(self, cast, movie):
         cast = literal_eval(cast)
         cast_type = self._cast_type("Actor")
         for profile in cast:
             _profile = self._crew_profile(profile)
             _crew = self._crew(_profile, cast_type)
-            self._add_movie_crew(_crew, movie_id)
+            self._add_movie_crew(_crew, movie)
 
-
-    def _cast_type(self, name):
-        try:
-            _cast_type = M.CastType.objects.get(name=name)
-        except exceptions.ObjectDoesNotExist:
-            _cast_type = M.CastType.objects.create(name=name)
-            _cast_type.save()
-        return _cast_type
-
-    def _crew(self, _profile, cast_type):
-        try:
-            _crew = M.Crew.objects.get(profile=_profile, role=cast_type)
-        except exceptions.ObjectDoesNotExist:
-            _crew = M.Crew.objects.create(profile=_profile, role=cast_type)
-            _crew.save()
-        return _crew
-
+    def _add_rating(self, rating):
+        uid = rating['userId'].astype(int)
+        mid = rating['movieId'].astype(int)
+        movie = self.get(M.Movie, id=mid)
+        user = self.get(M.UserProfile, id=uid)
+        _rating = self.get(M.Review, user=user, movie=movie, 
+                rating=rating["rating"])
+        print(uid, mid, rating["rating"]) 
 
     def prototype(self, data):
+        user = data["names_small"]
+
+        def wrapped(iterator):
+            limit = 50
+            if self.debug: return fy.take(limit, iterator)
+            return iterator
+
+        for i, user in wrapped(user.iterrows()):
+            _user = self._user(user)
+            print(_user)
 
         movies = data["movies_metadata"]
-        for i, movie in movies.iterrows():
-            self._movie(movie)
-
         credits = data["credits"]
-        for i, x in credits.iterrows():
-            cast, crew, _id = x
-            self._casts(cast, _id)
+
+        iterator = zip(movies.iterrows(), credits.iterrows())
+        for pack in wrapped(iterator):
+            (i, movie), (j, credit) = pack 
+            _movie = self._movie(movie)
+            print(i, movie["title"], _movie.id, movie["id"])
+            cast, crew, _id = credit
+            self._casts(cast, _movie)
             director = mldt.director(literal_eval(crew))
             if director is not None:
                 _profile = self._crew_profile(director)
                 cast_type = self._cast_type("Director")
                 _crew = self._crew(_profile, cast_type)
-                self._add_movie_crew(crew, _id)
+                self._add_movie_crew(_crew, _movie)
 
+        ratings = data["ratings_small"]
+        for i, rating in wrapped(ratings.iterrows()):
+            self._add_rating(rating)
 

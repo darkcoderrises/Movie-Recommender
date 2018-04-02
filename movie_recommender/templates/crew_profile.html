@@ -37,15 +37,14 @@
 					<h5 class="card-title"><strong>Movies</strong></h5>
 				</div>
 				<div class="row">
-					<p> {{movies}} </p>
-					<!-- {% for movie in movies.all %} -->
-					<!-- <div class="col-sm-3">
+					{% for movie in movies.all %}
+					<div class="col-sm-3">
 						<div class="card">
 							<img class="card-img-top" src="/static/images/movie.png" alt="Card image cap">
-							<h5 class="text-center"> {{movies}} </h5>
+							<h5 class="text-center"> {{movie}} </h5>
 						</div>
-					</div> -->
-					<!-- {% endfor %} -->
+					</div>
+					{% endfor %}
 				</div>
 			</div>
 		</div>
