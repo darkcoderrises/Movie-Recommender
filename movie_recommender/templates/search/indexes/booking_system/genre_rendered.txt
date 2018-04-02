@@ -1,0 +1,1 @@
+<a href="/genre/{{object.name}}">{{object.name}}</a>
