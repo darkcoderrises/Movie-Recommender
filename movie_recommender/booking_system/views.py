@@ -189,12 +189,15 @@ def movie(request, movie_id):
         theater_wise = {}
         for show in movie.show_set:
             theater_show = show.screen.theater
-            theater_wise[theater_show] = theater_wise.get(theater_show, [])
-            theater_wise[theater_show].append(show.show_time)
+            theater_wise[theater_show] = theater_wise.get(theater_show, set())
+            theater_wise[theater_show].append(show.show_time.strftime("%H:%S"))
 
+        for theater, timings in theater_wise:
+            theater_wise[theater] = list(timings)
         print (theater_wise)
 
-        return render(request, 'movie.html', {"movie": _movie})
+        return render(request, 'movie.html', {"movie": movie,
+                                              "timings": theater_wise})
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
 
