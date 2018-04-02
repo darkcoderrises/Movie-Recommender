@@ -5,7 +5,7 @@ import pandas as pd
 import funcy as fy
 import random
 import numpy
-
+from django.utils import timezone
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -21,7 +21,7 @@ class Command(BaseCommand):
     # def _seed_cast_type(self):
     #     M.CastType.objects.all().delete()
     #     c = ["Director", "Actor", "Producer"] #Creating three cast types
-    #     for i in range(3): 
+    #     for i in range(3):
     #         name = c[i]
     #         _cast_type = M.CastType.objects.create(name=name)
     #         _cast_type.save()
@@ -29,11 +29,11 @@ class Command(BaseCommand):
     # def _seed_gender(self):
     #     M.Gender.objects.all().delete()
     #     g = ["Male", "Female"] #Creating two gender
-    #     for i in range(2): 
+    #     for i in range(2):
     #         name = g[i]
     #         _gender = M.Gender.objects.create(name=name)
     #         _gender.save()
-    
+
     # def _seed_languages(self, langs):
     #     M.Language.objects.all().delete()
     #     langs = set(list(langs))
@@ -200,21 +200,21 @@ class Command(BaseCommand):
                     _seat = M.Seat.objects.create(screen=_screen,row_id=_row,
                                                   col_id=_column, seat_type=_seat_type)
                     _seat.save()
-  
+
     def _seed_shows(self):
         M.Show.objects.all().delete()
         _screens = list(M.Screen.objects.all())
         _movies = list(M.Movie.objects.all())
-        times = [[11,00,14,15,18,00,21,00], 
-        [12,00,15,00,19,00,22,00], 
+        times = [[11,00,14,15,18,00,21,00],
+        [12,00,15,00,19,00,22,00],
         [11,00,14,00,18,00,21,00]]
-        u = datetime.strptime("2018-04-01","%Y-%m-%d")
+        u = datetime.strptime("2018-04-01","%Y-%m-%d", tz=timezone.utc)
         l = []
         for i in range(14):# data for two weeks
             d = timedelta(days=i)
             l.append(u + d)
-        mn_day, mx_day = 1, 5 
-        mn_time, mx_time = 0, 2 
+        mn_day, mx_day = 1, 5
+        mn_time, mx_time = 0, 2
         for _screen in _screens:
             for _movie in _movies:
                 count_days = random.randint(mn_day, mx_day)
@@ -230,7 +230,7 @@ class Command(BaseCommand):
     # def _seed_booking(self):
     #     M.Booking.objects.all().delete()
     #     phones = ["0123456789","1234567890", "2345678901"]#, "3456789012", "4567890123"]
-    #     for p in phones:           
+    #     for p in phones:
     #         _user = M.UserProfile.objects.get(phone=p)
     #         _seats = M.Seat.objects.get(row_id='A', col_id=3)
     #         _type = M.SeatType.objects.get(name="Regular")
@@ -264,7 +264,7 @@ class Command(BaseCommand):
         self._seed_screens()
         self._seed_seat()
         self._seed_shows()
-    
+
 # 0 color
 # 1 director_name
 # 2 num_critic_for_reviews

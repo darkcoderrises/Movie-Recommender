@@ -24,7 +24,7 @@ from django.core.exceptions import ViewDoesNotExist
 from functors.booker import Booker
 from functors.recommender import PopularRecommender, CBRecommender
 from django.conf import settings
-from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 
@@ -40,6 +40,11 @@ def environment(**options):
     return env
 
 
+def render_with_user(request, template_name, args):
+    args['user'] = request.user
+    return render(request, template_name, args)
+
+
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -52,7 +57,7 @@ def signup(request):
             return redirect('show_movies')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'signup.html', {'form': form})
+    return render_with_user(request, 'signup.html', {'form': form})
 
 def signup_theaterowner(request):
     if request.method == 'POST':
@@ -66,7 +71,7 @@ def signup_theaterowner(request):
             return redirect('index')
     else:
         form = TheaterOwnerCreationForm()
-    return render(request, 'signup_theaterowner.html', {'form': form})
+    return render_with_user(request, 'signup_theaterowner.html', {'form': form})
 
 def search(request):
     movie_list = Movie.objects.all()
@@ -75,7 +80,7 @@ def search(request):
     #print(movie_list)
     movie_filter = UserFilter(request.GET, queryset=movie_list)
     #print(movie_filter.qs)
-    return render(request, 'movie_list.html', {'filter': movie_filter})
+    return render_with_user(request, 'movie_list.html', {'filter': movie_filter})
 
 
 @login_required
@@ -93,13 +98,13 @@ def update_profile(request):
         form = UpdateProfile()
 
     args['form'] = form
-    return render(request, 'update_profile.html', args)
+    return render_with_user(request, 'update_profile.html', args)
 
 
 def show_movies(request):
     movies = Movie.objects.all()
-    #movie_list = [render_to_string("movie_thumbnail.html", MovieSerializer(movie).data) for movie in queryset]
-    return render(request, 'movies.html', {'movies': movies})
+    #movie_list = [render_with_user_to_string("movie_thumbnail.html", MovieSerializer(movie).data) for movie in queryset]
+    return render_with_user(request, 'movies.html', {'movies': movies})
 
 
 def show_cast(request):
@@ -107,14 +112,14 @@ def show_cast(request):
         return HttpResponse("Only supports GET request")
 
     _crew = CrewProfile.objects.all()
-    return render(request, 'cast.html', {'crews': _crew})
+    return render_with_user(request, 'cast.html', {'crews': _crew})
     # cast = CrewProfile.objects.get(id=cast_id)
     # cast_data = CrewSerializer(cast)
 
     # movie_list = cast.movie_set.all()
-    # movie_list = [render_to_string("movie_thumbnail.html", MovieSerializer(movie).data) for movie in movie_list]
+    # movie_list = [render_with_user_to_string("movie_thumbnail.html", MovieSerializer(movie).data) for movie in movie_list]
 
-    # return render(request, 'cast.html', {"cast": cast_data.data, "movies": movie_list})
+    # return render_with_user(request, 'cast.html', {"cast": cast_data.data, "movies": movie_list})
 
 def running(request):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
@@ -142,7 +147,7 @@ def book_show(request, show_id):
             "id": seat.id,
         }
 
-    return render(request, "book_show.html", {
+    return render_with_user(request, "book_show.html", {
         'show': show,
         'movie': show.movie,
         'matrix': matrix,
@@ -186,7 +191,7 @@ def proceed(request):
 def movie(request, movie_id):
     try:
         _movie = Movie.objects.get(pk=movie_id)
-        return render(request, 'movie.html', {"movie": _movie})
+        return render_with_user(request, 'movie.html', {"movie": _movie})
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
 
@@ -198,7 +203,7 @@ def crew(request, crew_id):
         _crew = CrewProfile.objects.get(pk=crew_id)
         _crew_type = Crew.objects.get(profile=crew_id)
         _movies = Movie.objects.filter(crew=_crew_type.id)
-        return render(request, 'crew_profile.html', {"crew": _crew, "crew_type" : _crew_type, "movies": _movies})
+        return render_with_user(request, 'crew_profile.html', {"crew": _crew, "crew_type" : _crew_type, "movies": _movies})
     except CrewProfile.DoesNotExist:
         return HttpResponseNotFound('<h1>Crew profile Does not exist</h1>')
 
@@ -209,14 +214,14 @@ def popular(request):
     recommender = PopularRecommender()
     ordered = recommender.top(5)
     # print(ordered)
-    return render(request, 'popular.html', {"popular": ordered})
+    return render_with_user(request, 'popular.html', {"popular": ordered})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
 def similar(request, movie_id):
     query = Movie.objects.get(id=movie_id)
     recommender = CBRecommender()
     ordered = recommender.top(query)
-    return render(request, 'popular.html', {"popular": ordered})
+    return render_with_user(request, 'popular.html', {"popular": ordered})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
 def popular_by_genre(request, genre):
@@ -227,5 +232,5 @@ def popular_by_genre(request, genre):
 def shows(request, movie_id):
     _shows = Show.objects.filter(movie=movie_id)
     # print(_shows[0].show_time)
-    return render(request, 'shows.html', {"shows": _shows})
+    return render_with_user(request, 'shows.html', {"shows": _shows})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
