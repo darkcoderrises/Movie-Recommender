@@ -14,7 +14,7 @@ from rest_framework.authtoken import views as drf_views
 # urlpatterns = format_suffix_patterns(urlpatterns)
 
 urlpatterns = [
-    path('', views.show_movies, name='index'),
+    path('', views.home, name='index'),
     url(r'cast/(?P<cast_id>\d+)/$', views.show_cast, name='show_cast'),
     path('cast', views.show_cast, name='show_cast'),
     path('running', views.running, name='running'),

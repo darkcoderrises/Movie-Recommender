@@ -101,6 +101,16 @@ def update_profile(request):
     return render_with_user(request, 'update_profile.html', args)
 
 
+def user_home(request):
+    return render_with_user(request, 'user_home.html', {})
+
+def home(request):
+    if request.user.is_authenticated: return user_home(request)
+    return render(request, 'home.html')
+
+
+
+
 def show_movies(request):
     movies = Movie.objects.all()
     #movie_list = [render_with_user_to_string("movie_thumbnail.html", MovieSerializer(movie).data) for movie in queryset]
