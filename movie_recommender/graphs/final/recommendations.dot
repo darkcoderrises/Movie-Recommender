@@ -1,0 +1,181 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2018-04-03 17:45
+  // Cli Options: booking_system -I Movie,Similar,PredictedRating,User
+  rankdir = "LR";
+
+  fontname = "Lato"
+  fontsize = 8
+  splines  = true
+
+  node [
+    fontname = "Lato"
+    fontsize = 8
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Lato"
+    fontsize = 8
+  ]
+
+  // Labels
+
+
+  booking_system_models_Movie [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Movie
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">language</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">imdb_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">release_date</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">DateField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">synopsis</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">tagline</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">title</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Similar [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Similar
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">query</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">similar_to</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">rank</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_PredictedRating [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    PredictedRating
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">movie</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">user</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">rating</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  // Relations
+
+  /*
+  booking_system_models_Movie -> _
+  [label=""] ;
+
+  booking_system_models_Movie -> _
+  [label=""] ;
+
+  booking_system_models_Movie -> _
+  [label=""] ;
+  */
+
+  booking_system_models_Similar -> booking_system_models_Movie
+  [label="query (similar_query)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Similar -> booking_system_models_Movie
+  [label="similar_to (similar_similar_to)"] [arrowhead=none, arrowtail=dot, dir=both];
+  django_contrib_auth_models_User [label=<
+  <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+  <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+  <FONT FACE="Lato Bold" COLOR="white">User</FONT>
+  </TD></TR>
+  </TABLE>
+  >]
+  booking_system_models_PredictedRating -> django_contrib_auth_models_User
+  [label="user (predictedrating)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_PredictedRating -> booking_system_models_Movie
+  [label="movie (predictedrating)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+}
+

@@ -1,0 +1,272 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2018-04-03 13:26
+  // Cli Options: booking_system -I Movie,CrewProfile,Crew,CastType,AggregateRating,Language
+  rankdir = "LR";
+
+  fontname = "Lato"
+  fontsize = 8
+  splines  = true
+
+  node [
+    fontname = "Lato"
+    fontsize = 8
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Lato"
+    fontsize = 8
+  ]
+
+  // Labels
+
+
+  booking_system_models_CastType [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    CastType
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Language [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Language
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">lang</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_CrewProfile [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    CrewProfile
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">gender</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">age</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">IntegerField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">description</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">link</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT COLOR="#7B7B7B" FACE="Lato ">name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT COLOR="#7B7B7B" FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Crew [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Crew
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">profile</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">role</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+ {
+  booking_system_models_Movie [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Movie
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">language</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">imdb_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">release_date</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">DateField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">synopsis</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">tagline</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">title</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+    rank = same;
+
+  booking_system_models_AggregateRating [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    AggregateRating
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">movie</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">OneToOneField (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">average</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">count</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">IntegerField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">popularity</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+
+}
+
+
+  // Relations
+
+/*
+  booking_system_models_CrewProfile -> _
+  [label=""] ;
+  */
+
+  booking_system_models_Crew -> booking_system_models_CrewProfile
+  [label="profile (crew)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Crew -> booking_system_models_CastType
+  [label="role (crew)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Movie -> booking_system_models_Language
+  [label="language (movie)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Movie -> booking_system_models_Crew
+  [label="crew (movie)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+/*
+  booking_system_models_Movie -> _
+  [label=""] ;
+  */
+
+  //booking_system_models_AggregateRating -> booking_system_models_Movie
+  booking_system_models_Movie -> booking_system_models_AggregateRating 
+  [label="movie (aggregaterating)"] [arrowhead=none, arrowtail=none, dir=both];
+
+
+}
+

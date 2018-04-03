@@ -54,7 +54,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('show_movies')
+            return redirect('index')
     else:
         form = CustomUserCreationForm()
     return render_with_user(request, 'signup.html', {'form': form})
@@ -99,6 +99,16 @@ def update_profile(request):
 
     args['form'] = form
     return render_with_user(request, 'update_profile.html', args)
+
+
+def user_home(request):
+    return render_with_user(request, 'user_home.html', {})
+
+def home(request):
+    if request.user.is_authenticated: return user_home(request)
+    return render(request, 'home.html')
+
+
 
 
 def show_movies(request):

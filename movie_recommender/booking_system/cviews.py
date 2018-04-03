@@ -5,7 +5,7 @@ from django.views import generic
 from .forms import LoginForm
 class LoginView(generic.FormView):
     form_class = LoginForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('index')
     template_name = 'registration/login.html'
 
     def form_valid(self, form):
