@@ -147,7 +147,7 @@ class Seat(models.Model):
 
 
 class Booking(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     seats = models.ManyToManyField(Seat)
     show = models.ForeignKey(Show, on_delete=models.CASCADE)
 
@@ -163,7 +163,7 @@ class Invoice(models.Model):
 
 
 class Review(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
     description = models.TextField(default="")
@@ -188,3 +188,15 @@ class Similar(models.Model):
 
     class Meta:
         unique_together = ['query', 'similar_to']
+
+
+class PredictedRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    rating = models.FloatField(default=0)
+
+    class Meta:
+        unique_together = ['user', 'movie']
+
+
+
