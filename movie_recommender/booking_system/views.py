@@ -171,14 +171,12 @@ def cancel_booking(request, booking_id):
 
 def add_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
-    booker = Booker()
     Booker.select(booker, booking_id, seat_id, request.user.userprofile.id)
     return JsonResponse({})
 
 def delete_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
-    booker = Booker()
-    booker.deselect(booking_id, seat_id, request.user.userprofile.id)
+    Booker.deselect(booking_id, seat_id, request.user.userprofile.id)
     return JsonResponse({})
 
 def proceed(request):
