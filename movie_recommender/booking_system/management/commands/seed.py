@@ -208,7 +208,7 @@ class Command(BaseCommand):
         times = [[11,00,14,15,18,00,21,00],
         [12,00,15,00,19,00,22,00],
         [11,00,14,00,18,00,21,00]]
-        u = datetime.strptime("2018-04-01","%Y-%m-%d", tz=timezone.utc)
+        u = datetime.strptime("2018-04-01","%Y-%m-%d")
         l = []
         for i in range(14):# data for two weeks
             d = timedelta(days=i)

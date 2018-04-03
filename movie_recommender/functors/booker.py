@@ -26,10 +26,12 @@ def t_deselect(booking_id, seat_id, user_id):
 
 
 class Booker(Singleton):
-    def select(self, booking_id, seat_id, user_id):
+    @staticmethod
+    def select(booking_id, seat_id, user_id):
         return t_select.apply_async((booking_id, seat_id, user_id))
 
-    def deselect(self, booking_id, seat_id, user_id):
+    @staticmethod
+    def deselect(booking_id, seat_id, user_id):
         return t_deselect.delay(booking_id, seat_id, user_id)
 
     def retrieve(self, show):
