@@ -1,0 +1,238 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2018-04-03 17:40
+  // Cli Options: booking_system -I Show,Seat,StatusType,Booking,Invoice,User
+  rankdir = "LR";
+
+  fontname = "Lato"
+  fontsize = 8
+  splines  = true
+
+  node [
+    fontname = "Lato"
+    fontsize = 8
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Lato"
+    fontsize = 8
+  ]
+
+  // Labels
+
+
+  booking_system_models_StatusType [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    StatusType
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Show [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Show
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">movie</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">screen</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">show_time</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">DateTimeField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Seat [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Seat
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">screen</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">seat_type</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">col_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">row_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Booking [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Booking
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">show</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">user</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Invoice [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Invoice
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">booking</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">OneToOneField (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">status</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">service_charge</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">taxes</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">ticket_price</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">total_price</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  // Relations
+  /*
+
+  booking_system_models_Show -> _
+  [label=""] ;
+
+  booking_system_models_Show -> _
+  [label=""] ;
+
+  booking_system_models_Seat -> _
+  [label=""] ;
+
+  booking_system_models_Seat -> _
+  [label=""] ;
+
+  */
+  django_contrib_auth_models_User [label=<
+  <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+  <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+  <FONT FACE="Lato Bold" COLOR="white">User</FONT>
+  </TD></TR>
+  </TABLE>
+  >]
+  booking_system_models_Booking -> django_contrib_auth_models_User
+  [label="user (booking)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Booking -> booking_system_models_Show
+  [label="show (booking)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Booking -> booking_system_models_Seat
+  [label="seats (booking)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  booking_system_models_Invoice -> booking_system_models_Booking
+  [label="booking (invoice)"] [arrowhead=none, arrowtail=none, dir=both];
+
+  booking_system_models_Invoice -> booking_system_models_StatusType
+  [label="status (invoice)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+}
+

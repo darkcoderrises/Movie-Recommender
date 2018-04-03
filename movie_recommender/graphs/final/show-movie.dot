@@ -1,0 +1,343 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2018-04-03 17:32
+  // Cli Options: booking_system -I Theater,City,Location,Seat,SeatType,Show,Movie,Screen
+
+  rankdir = "LR";
+
+  fontname = "Lato"
+  fontsize = 8
+  splines  = true
+
+  node [
+    fontname = "Lato"
+    fontsize = 8
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Lato"
+    fontsize = 8
+  ]
+
+  // Labels
+
+
+  booking_system_models_Movie [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Movie
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">language</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">imdb_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">release_date</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">DateField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">synopsis</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">tagline</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">TextField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">title</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_SeatType [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    SeatType
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">price</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+{
+    rank = same;
+
+  booking_system_models_City [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    City
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Location [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Location
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">city</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">location_lat</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">location_long</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">FloatField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Theater [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Theater
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">location</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+}
+
+  booking_system_models_Screen [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Screen
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">theater</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">identifier</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Show [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Show
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">movie</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">screen</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">show_time</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">DateTimeField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+  booking_system_models_Seat [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4">
+    <FONT FACE="Lato Bold" COLOR="white">
+    Seat
+    </FONT></TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">AutoField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">screen</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato Bold">seat_type</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato Bold">ForeignKey (id)</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">col_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Lato ">row_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Lato ">CharField</FONT>
+    </TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  // Relations
+
+/*
+  booking_system_models_Movie -> _
+  [label=""] ;
+
+  booking_system_models_Movie -> _
+  [label=""] ;
+
+  booking_system_models_Movie -> _
+  [label=""] ;
+*/
+
+  booking_system_models_Location -> booking_system_models_City
+  [label="city (location)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Theater -> booking_system_models_Location
+  [label="location (theater)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Screen -> booking_system_models_Theater
+  [label="theater (screen)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Show -> booking_system_models_Movie
+  [label="movie (show)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Show -> booking_system_models_Screen
+  [label="screen (show)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Seat -> booking_system_models_Screen
+  [label="screen (seat)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Seat -> booking_system_models_SeatType
+  [label="seat_type (seat)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  booking_system_models_Theater -> booking_system_models_Show
+  [label=""] [arrowhead=none, arrowtail=dot, dir=both, style=invis];
+
+
+}
+
