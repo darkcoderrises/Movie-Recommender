@@ -51,11 +51,11 @@ class Booker(Singleton):
 
     def invoice_success(self, booking):
         booking.invoice.status = StatusType.objects.get(name="Success")
-        return booking.save()
+        return booking.invoice.save()
 
     def invoice_failure(self, booking):
         booking.invoice.status = StatusType.objects.get(name="Failure")
-        return booking.save()
+        return booking.invoice.save()
 
     def cancel(self, booking):
         booking.delete()

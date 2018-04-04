@@ -178,8 +178,34 @@ def upcoming(request):
     return render_with_user(request, 'movies.html', {'movies': movies})
 
 
+def dummy_gateway(request):
+    amount = request.GET.get('amount', 0)
+    id = request.GET.get('id', 0)
+    hit_url = request.GET.get('hit_url', 'http://localhost:8000/payment')
+
+    return render(request, 'dummy_gateway.html', {'amount': amount, 'id': id, 'hit_url': hit_url})
+
+
 def payment(request):
-    return HttpResponseNotFound('<h1>Page under construction?</h1>')
+    booking_id = request.GET.get('id')
+    success = request.GET.get('success')
+    try:
+        booking = Booking.objects.get(id=int(booking_id))
+        success = int(success)
+        if booking.invoice.status.name != "In Progress":
+            return redirect('/booking_detail/' + booking_id)
+
+        booker = Booker()
+        if success:
+            booker.invoice_success(booking)
+        else:
+            booker.invoice_failure(booking)
+
+        return redirect('/booking_detail/'+booking_id)
+
+    except Exception as e:
+        print(e)
+        return redirect('index')
 
 
 def book_show(request, show_id):

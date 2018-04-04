@@ -40,19 +40,28 @@
       </div>
 
       <div class="card-footer">
-        <button role="button" class="btn btn-danger" style="float:right;">Proceed</button>
+        <button role="button" class="btn btn-danger" style="float:right;" id="proceed">Proceed</button>
       </div>
     </div>
   </div>
 
   <script type="text/javascript">
+    var confirmed = 0;
+
+    $(window).on('load', function() {
+        $('#proceed').on('click', function () {
+            confirmed = 1;
+            window.location.href = 'http://localhost:8000/dummy_gateway?amount={{invoice.total_price}}&id={{booking.id}}';
+        });
+    });
 
     $(window).on('beforeunload', function() {
+        if (confirmed === 1) return;
       $.ajax({
         url: "http://localhost:8000/cancel_booking/{{booking.id}}",
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
-          booking_id: {{booking.id}}
+          booking_id: "{{booking.id}}",
         }
       });
 
