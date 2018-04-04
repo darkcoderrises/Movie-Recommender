@@ -7,6 +7,9 @@
   <h2>Login</h2>
     {% csrf_token %}
     {% crispy form form.helper %}
-  </form>
+
+
+  <h4>New User : <a href="/signup">Sign Up Here</a></h4>
+  <h4>Theater Owner : <a href="/theater_owner/signup">Sign Up Here</a></h4>
 {% endblock %}
 

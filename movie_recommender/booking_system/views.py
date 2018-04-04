@@ -55,6 +55,9 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
+            user.save()
+            user_profile = UserProfile.objects.create(user=user, gender=Gender.objects.all()[0])
+            user_profile.save()
             return redirect('index')
     else:
         form = CustomUserCreationForm()
@@ -74,19 +77,18 @@ def signup_theaterowner(request):
             my_group.user_set.add(user)
             user.is_staff = True
             user.save()
+            user_profile = UserProfile.objects.create(user=user, gender=Gender.objects.all()[0])
+            user_profile.save()
             return HttpResponseRedirect("/admin/")
     else:
         form = CustomUserCreationForm()
         form.helper.form_action = "/theater_owner/signup"
     return render_with_user(request, 'theater_owner_signup.html', {'form': form})
 
+
 def search(request):
     movie_list = Movie.objects.all()
-    #for movie in movie_list:
-     #   print("<{}>".format(movie.title))
-    #print(movie_list)
     movie_filter = UserFilter(request.GET, queryset=movie_list)
-    #print(movie_filter.qs)
     return render_with_user(request, 'movie_list.html', {'filter': movie_filter})
 
 
@@ -98,14 +100,17 @@ def update_profile(request):
         form = UpdateProfile(request.POST, instance=request.user)
         form.actual_user = request.user
         if form.is_valid():
-            form.save()
-            #return HttpResponseRedirect(reverse('update_profile_success'))
+            p = form.save(commit=False)
+            p.user = request.user
+            p.save()
             return redirect('index')
     else:
         form = UpdateProfile()
+        #TODO base values
 
     args['form'] = form
-    return render_with_user(request, 'update_profile.html', args)
+    args['user'] = request.user
+    return render(request, 'update_profile.html', args)
 
 
 def user_home(request):

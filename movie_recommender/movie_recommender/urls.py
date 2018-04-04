@@ -28,8 +28,6 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path(r'', include('booking_system.urls')),
     path(r'admin/', admin.site.urls),
-    #url(r'^login/$', core_views.login, name='login'),
-    #url(r'^login/$',auth_views.login, {'template_name': 'login.html'}),
     url(r'^login/$', cviews.LoginView.as_view(), name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^signup/$', core_views.signup, name='signup'),

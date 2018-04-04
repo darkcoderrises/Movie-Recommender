@@ -17,8 +17,18 @@ class CustomUserCreationForm(UserCreationForm):
         self.helper.add_input(Submit('submit', 'Submit'))
 
 
-class UpdateProfile(forms.ModelForm): 
-    pass
+class UpdateProfile(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(UpdateProfile, self).__init__(*args, *kwargs)
+        self.helper = FormHelper(self)
+
+        self.helper.form_method = "post"
+        self.helper.form_action = "/preferences"
+        self.helper.add_input(Submit('save', 'Save'))
+
+    class Meta:
+        model = UserProfile
+        fields = ["age", "gender", "phone", "genre_pref"]
 
 
 class UserProfileCreationForm(forms.ModelForm):

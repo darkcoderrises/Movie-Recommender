@@ -52,12 +52,13 @@ class Genre(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField(default=0)
-    gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, default=0)
     phone = models.CharField(default="", max_length=10)
     genre_pref = models.ManyToManyField(Genre)
 
     def __str__(self):
         return self.user.__str__()
+
 
 class Crew(models.Model):
     profile = models.ForeignKey(CrewProfile, on_delete=models.CASCADE)
