@@ -16,6 +16,7 @@ from functors.recommender import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from collections import namedtuple
+from functors.notifier import Notifier
 
 from datetime import date
 from django.db.models import Count
@@ -228,8 +229,15 @@ def payment(request):
 
         booker = Booker()
         if success:
+            Notifier().mail(request.user, "Booking Successful", """
+                Congratulations, your movie ticket for the movie {0} is successfully booked.
+                You can show the following link to see the movie {1}
+            """.format(booking.show.movie.title, '/booking_detail'+str(booking.id)))
             booker.invoice_success(booking)
         else:
+            Notifier().mail(request.user, "Booking Unsuccessful", """
+                Sorry the movie ticket you were trying to book was not successful.
+            """)
             booker.invoice_failure(booking)
 
         return redirect('/booking_detail/'+booking_id)

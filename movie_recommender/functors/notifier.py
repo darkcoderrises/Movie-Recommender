@@ -1,10 +1,8 @@
 from django.core.mail import send_mail
+from .singleton import Singleton
 
 
-class Notifier:
-    def __init__(self, config):
-        pass
-
+class Notifier(Singleton):
     @staticmethod
     def mail(user, subject, body):
         """
