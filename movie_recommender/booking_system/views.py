@@ -310,6 +310,11 @@ def booking_summary(request, booking_id):
     except Exception:
         return redirect('index')
 
+def similar_movies(movie_id):
+    query = Movie.objects.get(id=movie_id)
+    recommender = CBRecommender()
+    ordered = recommender.top(query)
+    return ordered
 
 def movie(request, movie_id):
     try:
@@ -323,8 +328,8 @@ def movie(request, movie_id):
         #     # Returns crew.
 
         _movie = Movie.objects.get(pk=movie_id)
-        # ordered_crew(_movie.crew)
-        return render_with_user(request, 'movie.html', {"movie": _movie})
+        similar_movie = similar_movies(movie_id)
+        return render_with_user(request, 'movie.html', {"movie": _movie, 'similar' : similar_movie})
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
 
@@ -336,8 +341,8 @@ def confirm_booking(request, show_id):
 def crew(request, crew_id):
     try:
         _crew = CrewProfile.objects.get(pk=crew_id)
-        _crew_type = Crew.objects.get(profile=crew_id)
-        _movies = Movie.objects.filter(crew=_crew_type.id)
+        _crew_type = Crew.objects.filter(profile=crew_id)
+        _movies = Movie.objects.filter(crew=_crew_type[0].id)
         return render_with_user(request, 'crew_profile.html', {"crew": _crew, "crew_type" : _crew_type, "movies": _movies})
     except CrewProfile.DoesNotExist:
         return HttpResponseNotFound('<h1>Crew profile Does not exist</h1>')
@@ -346,15 +351,6 @@ def crew(request, crew_id):
 def theater(request, theater_id):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
-
-def popular(request):
-    recommender = PopularRecommender()
-    ordered = recommender.top(5)
-    # print(ordered)
-    return render_with_user(request, 'popular.html', {"popular": ordered})
-    # return HttpResponseNotFound('<h1>Page under construction?</h1>')
-
-
 def similar(request, movie_id):
     query = Movie.objects.get(id=movie_id)
     recommender = CBRecommender()
@@ -362,6 +358,12 @@ def similar(request, movie_id):
     return render_with_user(request, 'popular.html', {"popular": ordered})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
+def popular(request):
+    recommender = PopularRecommender()
+    ordered = recommender.top(5)
+    # print(ordered)
+    return render_with_user(request, 'popular.html', {"popular": ordered})
+    # return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
 def popular_by_genre(request, genre):
     recommender = PopularRecommender()
@@ -410,6 +412,5 @@ def review(request, movie_id):
 
 
 def user_review(request):
-    print(request.user.id)
-    reviews = Review.objects.filter(user=19)#request.user.id)
+    reviews = Review.objects.filter(user=request.user.id)
     return render_with_user(request, 'user_review.html', {"reviews": reviews})
