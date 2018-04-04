@@ -13,9 +13,12 @@ class CFRecommender(BaseRecommender):
         booked_movies = list(map(lambda x: x.show.movie, bookings))
         ratings = M.PredictedRating.objects.filter(user=user,
                     movie__in=movies
-                ).order_by('rating'
+                ).order_by('-rating'
                 ).exclude(movie__in=booked_movies)
-        return ratings
+        movies = []
+        for rating in ratings:
+            movies.append(rating.movie)
+        return movies
 
 
     def compute(self):
