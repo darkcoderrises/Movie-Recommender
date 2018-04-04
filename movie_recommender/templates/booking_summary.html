@@ -45,6 +45,22 @@
     </div>
   </div>
 
+  <script type="text/javascript">
+
+    $(window).on('beforeunload', function() {
+      $.ajax({
+        url: "http://localhost:8000/cancel_booking/{{booking.id}}",
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          booking_id: {{booking.id}}
+        }
+      });
+
+      console.log('called');
+    });
+
+  </script>
+
 {% endblock %}
 
 {% block title %}

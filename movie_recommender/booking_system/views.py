@@ -247,8 +247,11 @@ def proceed(request):
 
 
 def booking_summary(request, booking_id):
-    booking = Booking.objects.get(pk=booking_id)
-    return render_with_user(request, "booking_summary.html", {'booking': booking, 'invoice': booking.invoice, 'show': booking.show, 'movie': booking.show.movie})
+    try:
+        booking = Booking.objects.get(pk=booking_id)
+        return render_with_user(request, "booking_summary.html", {'booking': booking, 'invoice': booking.invoice, 'show': booking.show, 'movie': booking.show.movie})
+    except Exception:
+        return redirect('index')
 
 
 def movie(request, movie_id):
