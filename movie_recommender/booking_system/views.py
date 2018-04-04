@@ -136,7 +136,18 @@ def user_home(request):
 def home(request):
     if request.user.is_authenticated:
         return user_home(request)
-    return render(request, 'home.html')
+
+    # Setup things for home.
+    from functors.recommender import PopularRecommender
+    PR = PopularRecommender()
+    worldwide = PR.top(10)
+    city_id = request.GET.get('city', '')
+    city = []
+    if city_id:
+        city = PR.top_by_city(city_id, 10)
+
+    return render(request, 'home.html', {'worldwide': worldwide, 'city':
+        city})
 
 
 def show_movies(request):

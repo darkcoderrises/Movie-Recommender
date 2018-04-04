@@ -8,10 +8,31 @@
     <div class="col-7">
         <div class="row">
             <div class="col-12">
-                <h3> Popular in your area. </h3>
+                <h3> Popular in your area! </h3>
+                <div class="row">
+                    {% for movie in city %}
+                    <div class="col-3">
+                        {% include "movie_thumbnail.html" %}
+                    </div>
+                    {% empty %}
+                    <div class="col">
+                        Please choose a city.
+                    </div>
+
+                    {% endfor %}
+
+                    
+                </div>
             </div>
             <div class="col-12">
                 <h3> Popular worldwide </h3>
+                <div class="row">
+                    {% for movie in worldwide %}
+                    <div class="col-3">
+                        {% include "movie_thumbnail.html" %}
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
