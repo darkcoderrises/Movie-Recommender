@@ -3,19 +3,18 @@
 {% block content %}
 <div class="row">
 	<div class="col-sm-4">
-		<div class="card">
-			<img class="card-img-top" src="/static/images/crew.png" alt="Card image cap">
-			<div class="card-body">
-				<div class="row">
-					<h3 class="card-title"> <strong>{{crew.name}}</strong> </h3>
-				</div>
-				<div class="row">
-					<p><span style='border:1px black solid; font-size:20px;' > {{crew_type.role}}</span></p>
-					<!-- {% for crew_type in crew_type.role.all %}
-					<p><span style='border:1px black solid; font-size:20px;' >{{crew_type}}</span></p>
-					{% endfor %} -->
-				</div>
-			</div>
+		<div class="card" style="width: 18rem;">
+		  <img class="card-img-top" src="/static/images/crew.png" alt="Card image cap">
+		  <div class="card-body">
+		    <h3 class="card-title"> <strong>{{crew.name}}</strong> </h3>
+		  </div>
+		  <ul class="list-group list-group-flush">
+		    <li class="list-group-item">
+		    	{% for role in crew_type.all %}
+		    	<button type="button" class="btn btn-outline-secondary">{{role.role}}</button>
+		    	{%endfor%}
+		    </li>
+		  </ul>
 		</div>
 	</div>
 	<div class="col-sm-8">
@@ -23,16 +22,16 @@
 			<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs">
    			 	<li class="nav-item">
-   			 		<a class="nav-link active" href="#">Description</a>
+   			 		<a class="nav-link active" href="../../crew/{{crew.id}}">Description</a>
    			 	</li>
    			 </ul>
    			</div>	
 			<div class="card-body">
-				<div class="row">
+				<!-- <div class="row">
 					<h5 class="card-title"><strong>Personal Details</strong></h5>
 					<p class="card-text">{{crew.description}}</p>
 					<p class="card-text">{{crew.link}}</p>
-				</div>
+				</div> -->
 				<div class="row">
 					<h5 class="card-title"><strong>Movies</strong></h5>
 				</div>
@@ -41,7 +40,7 @@
 					<div class="col-sm-3">
 						<div class="card">
 							<img class="card-img-top" src="/static/images/movie.png" alt="Card image cap">
-							<h5 class="text-center"> {{movie}} </h5>
+							<h5 class="text-center"><a href="../../movie/{{movie.id}}"> {{movie}} </a></h5>
 						</div>
 					</div>
 					{% endfor %}
