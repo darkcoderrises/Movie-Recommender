@@ -16,13 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.views import login
 from django.conf.urls import url
 from booking_system import views as core_views
 from booking_system import cviews 
 from django.views.generic import RedirectView
-#from movie_recommender.search import views
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 urlpatterns = [
@@ -34,5 +33,5 @@ urlpatterns = [
     url(r'^accounts/profile/$', RedirectView.as_view(url='/default/', permanent=False)),
     url(r'^search/', include('haystack.urls')),
     url(r'^accounts/update/$', core_views.update_profile, name='update_user'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -176,6 +176,7 @@ class Review(models.Model):
     class Meta:
         unique_together = ['user', 'movie']
 
+
 class AggregateRating(models.Model):
     movie = models.OneToOneField(Movie, on_delete=models.CASCADE)
     average = models.FloatField(default=0)
