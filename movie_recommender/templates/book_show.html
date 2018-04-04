@@ -1,24 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="container">
-    {% for row in matrix %}
-      <div class="row">
-      {% for element in row %}
-        {% if element.selected %}
-          <div class="movie_ticket unselectable"></div>
-        {% endif %}
-        {% if not element.selected %}
-          <div class="movie_ticket selectable" id={{element.id}}></div>
-        {% endif %}
-      {% endfor %}
-      </div>
-    {% endfor %}
+  <div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">{{movie.title}}</h4>
+      <p>{{show.screen.theater}}</p>
+    </div>
   </div>
 
-  <div class="container">
-    <div class="row">
-      <div id="proceed">Proceed</div>
+  <div class="card" style="margin-left: 15px; margin-right: 15px;">
+    <div class="card-header">
+      {{show.show_time}}
+      <div style="float:right;">
+        <div class="text-muted" style="float:left; margin-right:4px;">TOTAL:</div> Rs.<div id="amount" style="float:right;">0</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="container">
+        {% for row in matrix %}
+          <div class="row">
+            <div style="margin:auto;">
+              {% for element in row %}
+                {% if element.selected %}
+                  <div class="movie_ticket unselectable" style="float:left;"></div>
+                {% endif %}
+                {% if not element.selected %}
+                  <div class="movie_ticket selectable" id={{element.id}} amount="{{element.amount}}" style="float:left;"></div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card-footer">
+      <button id="proceed" role="button" class="btn btn-danger" style="float: right;">Proceed</button>
     </div>
   </div>
 
@@ -26,25 +42,30 @@
     var booking_id = -1;
     var num_req = 0;
     var confirmed = 0;
+    var amount = 0;
 
-    var add_seat = function(seat_id) {
+    var add_seat = function(seat_id, a) {
       $.ajax({
         url: "http://localhost:8000/add_seat/" + booking_id,
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
           seat_id: seat_id,
         }
-      })
+      });
+      amount += parseInt(a);
+      $('#amount').text(amount+'.00');
     };
 
-    var delete_seat = function(seat_id) {
+    var delete_seat = function(seat_id, a) {
       $.ajax({
         url: "http://localhost:8000/delete_seat/" + booking_id,
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
           seat_id: seat_id,
         }
-      })
+      });
+      amount -= parseInt(a);
+      $('#amount').text(amount+'.00');
     };
 
     $(window).on('load', function(){
@@ -62,23 +83,23 @@
           num_req -= 1;
           console.log("failure start booking")
         }
-      })
+      });
       num_req += 1;
 
       $( ".selectable" ).each(function(index) {
         $(this).on("click", function(){
           if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
-            delete_seat($(this).attr('id'));
+            delete_seat($(this).attr('id'), $(this).attr('amount'));
           } else {
             $(this).addClass('selected');
-            add_seat($(this).attr('id'));
+            add_seat($(this).attr('id'), $(this).attr('amount'));
           }
         });
       });
 
       $("#proceed").on('click', function() {
-        if (num_req != 0 || booking_id == -1) {
+        if (num_req !== 0 || booking_id === -1) {
           return;
         }
 
@@ -90,7 +111,11 @@
           },
           success: function(result) {
             confirmed = result.success;
-            console.log(result);
+            if (confirmed) {
+                window.location.href = "http://localhost:8000/booking_summary/" + booking_id;
+            } else {
+                alert('Something went wrong');
+            }
           },
           error: function() {
             alert('Something went wrong');

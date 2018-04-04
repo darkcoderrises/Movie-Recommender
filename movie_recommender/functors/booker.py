@@ -13,6 +13,7 @@ def t_select(booking_id, seat_id, user_id):
         if Booking.objects.filter(show=booking.show, seats__id=seat_id).count():
             return booking.delete()
         booking.seats.add(Seat.objects.get(pk=seat_id))
+        booking.invoice.calculate()
         return booking.save()
 
 @app.task
@@ -22,6 +23,7 @@ def t_deselect(booking_id, seat_id, user_id):
         if booking.user.id != user_id or booking.invoice.status.name != "In Progress":
             return
         booking.seats.remove(Seat.objects.get(pk=seat_id))
+        booking.invoice.calculate()
         return booking.save()
 
 
@@ -49,11 +51,11 @@ class Booker(Singleton):
 
     def invoice_success(self, booking):
         booking.invoice.status = StatusType.objects.get(name="Success")
-        return booking.save()
+        return booking.invoice.save()
 
     def invoice_failure(self, booking):
         booking.invoice.status = StatusType.objects.get(name="Failure")
-        return booking.save()
+        return booking.invoice.save()
 
     def cancel(self, booking):
         booking.delete()

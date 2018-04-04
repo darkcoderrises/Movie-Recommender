@@ -193,8 +193,34 @@ def upcoming(request):
     return render_with_user(request, 'movies.html', {'movies': movies})
 
 
+def dummy_gateway(request):
+    amount = request.GET.get('amount', 0)
+    id = request.GET.get('id', 0)
+    hit_url = request.GET.get('hit_url', 'http://localhost:8000/payment')
+
+    return render(request, 'dummy_gateway.html', {'amount': amount, 'id': id, 'hit_url': hit_url})
+
+
 def payment(request):
-    return HttpResponseNotFound('<h1>Page under construction?</h1>')
+    booking_id = request.GET.get('id')
+    success = request.GET.get('success')
+    try:
+        booking = Booking.objects.get(id=int(booking_id))
+        success = int(success)
+        if booking.invoice.status.name != "In Progress":
+            return redirect('/booking_detail/' + booking_id)
+
+        booker = Booker()
+        if success:
+            booker.invoice_success(booking)
+        else:
+            booker.invoice_failure(booking)
+
+        return redirect('/booking_detail/'+booking_id)
+
+    except Exception as e:
+        print(e)
+        return redirect('index')
 
 
 def book_show(request, show_id):
@@ -213,6 +239,7 @@ def book_show(request, show_id):
         matrix[col_id][row_id] = {
             "selected": False,
             "id": seat.id,
+            "amount": seat.seat_type.price,
         }
 
     return render_with_user(request, "book_show.html", {
@@ -224,14 +251,14 @@ def book_show(request, show_id):
 
 def start_booking(request, show_id):
     show = Show.objects.get(pk=show_id)
-    user = request.user.userprofile
+    user = request.user
     booker = Booker()
     booking = booker.start_booking(show, user)
     return JsonResponse({"booking": model_to_dict(booking)})
 
 
 def cancel_booking(request, booking_id):
-    user = request.user.userprofile
+    user = request.user
     booking = Booking.objects.get(pk=booking_id)
     if booking.user != user:
         return JsonResponse({"success": False})
@@ -258,6 +285,14 @@ def proceed(request):
         return JsonResponse({"success": True})
     else:
         return JsonResponse({"success": False})
+
+
+def booking_summary(request, booking_id):
+    try:
+        booking = Booking.objects.get(pk=booking_id)
+        return render_with_user(request, "booking_summary.html", {'booking': booking, 'invoice': booking.invoice, 'show': booking.show, 'movie': booking.show.movie})
+    except Exception:
+        return redirect('index')
 
 
 def movie(request, movie_id):

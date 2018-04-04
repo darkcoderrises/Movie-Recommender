@@ -41,5 +41,7 @@ urlpatterns = [
     path('bookings/', views.booking, name="bookings"),
     path('rate/<int:movie_id>', views.rate, name="rate"),
     path('review/<int:movie_id>/', views.review, name="user_reviews"),
+    path('booking_summary/<int:booking_id>/', views.booking_summary, name="booking_summary"),
+    path('dummy_gateway/', views.dummy_gateway, name="dummy_gateway"),
     path('user_review', views.user_review, name="user_specific_review"),
 ]

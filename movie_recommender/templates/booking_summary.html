@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">{{movie.title}}</h4>
+      <p>{{show.screen.theater}}</p>
+    </div>
+
+    <div class="card" style="width: 20rem; margin:auto;">
+      <div class="card-header">
+        <h5 class="text-danger">BOOKING SUMMARY</h5>
+      </div>
+      <div class="card-body" style="padding-bottom: 0">
+        <div class="card-title">
+          {% for seat in booking.seats.all %}
+            <b>{{seat}}</b>
+          {% endfor %}
+
+          <div style="float:right;"><b>Rs. {{invoice.ticket_price}}</b></div>
+          <div class="text-muted">{{show.screen}}</div>
+        </div>
+
+        <div class="card-text">
+          Taxes
+          <div style="float:right;"><b>Rs. {{invoice.taxes}}</b></div>
+        </div>
+
+        <div class="card-text">
+          Service Charge
+          <div style="float:right;"><b>Rs. {{invoice.service_charge}}</b></div>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="card-title text-danger">
+          <b>TOTAL</b>
+          <div style="float:right;"><b>Rs. {{invoice.total_price}}</b></div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button role="button" class="btn btn-danger" style="float:right;" id="proceed">Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var confirmed = 0;
+
+    $(window).on('load', function() {
+        $('#proceed').on('click', function () {
+            confirmed = 1;
+            window.location.href = 'http://localhost:8000/dummy_gateway?amount={{invoice.total_price}}&id={{booking.id}}';
+        });
+    });
+
+    $(window).on('beforeunload', function() {
+        if (confirmed === 1) return;
+      $.ajax({
+        url: "http://localhost:8000/cancel_booking/{{booking.id}}",
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          booking_id: "{{booking.id}}",
+        }
+      });
+
+      console.log('called');
+    });
+
+  </script>
+
+{% endblock %}
+
+{% block title %}
+  {{movie.title}}
+{% endblock %}
