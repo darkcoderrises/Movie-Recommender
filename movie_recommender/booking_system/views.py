@@ -198,6 +198,7 @@ def book_show(request, show_id):
         matrix[col_id][row_id] = {
             "selected": False,
             "id": seat.id,
+            "amount": seat.seat_type.price,
         }
 
     return render_with_user(request, "book_show.html", {
