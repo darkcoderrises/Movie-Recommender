@@ -1,0 +1,44 @@
+<div class="col-sm-4" style="padding: 10px;">
+    <center>
+        <h4>Add your rating</h4>
+        <div class="br-wrapper br-theme-fontawesome-stars" style="margin: 10px;">
+            <div id="value-rating-{{booking.id}}"></div>
+            <select id="rating-{{booking.id}}">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <a id="submit-rating-{{booking.id}}" class="btn btn-outline-primary" role="button">Rate It</a>
+    </center>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        var rating = 0;
+        $('#rating-{{booking.id}}')
+            .barrating('show', {
+                theme: 'fontawesome-stars',
+                initialRating: '{{review.rating}}',
+                onSelect: function(value, text, event) {
+                    $('#value-rating-{{booking.id}}').text(value);
+                    rating = value;
+                },
+            });
+
+        $('#submit-rating-{{booking.id}}').on('click', function () {
+            if (rating === 0) {
+                return;
+            }
+            $.ajax({
+                url: 'http://localhost:8000/rate/{{booking.show.movie.id}}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    rating: rating,
+                },
+            });
+        })
+    });
+</script>
