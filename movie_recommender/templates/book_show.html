@@ -1,17 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
+  <div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">{{movie.title}}</h4>
+      <p>{{show.screen.theater}}</p>
+      <hr>
+      <p class="mb-0">{{show.show_time}}</p>
+    </div>
+  </div>
+
   <div class="container">
     {% for row in matrix %}
       <div class="row">
-      {% for element in row %}
-        {% if element.selected %}
-          <div class="movie_ticket unselectable"></div>
-        {% endif %}
-        {% if not element.selected %}
-          <div class="movie_ticket selectable" id={{element.id}}></div>
-        {% endif %}
-      {% endfor %}
+        <div style="margin:auto;">
+          {% for element in row %}
+            {% if element.selected %}
+              <div class="movie_ticket unselectable"></div>
+            {% endif %}
+            {% if not element.selected %}
+              <div class="movie_ticket selectable" id={{element.id}}></div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
     {% endfor %}
   </div>

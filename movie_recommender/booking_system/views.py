@@ -209,14 +209,14 @@ def book_show(request, show_id):
 
 def start_booking(request, show_id):
     show = Show.objects.get(pk=show_id)
-    user = request.user.userprofile
+    user = request.user
     booker = Booker()
     booking = booker.start_booking(show, user)
     return JsonResponse({"booking": model_to_dict(booking)})
 
 
 def cancel_booking(request, booking_id):
-    user = request.user.userprofile
+    user = request.user
     booking = Booking.objects.get(pk=booking_id)
     if booking.user != user:
         return JsonResponse({"success": False})
