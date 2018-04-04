@@ -10,15 +10,31 @@
             <div class="col-12">
                 <h3> Recommended for you. </h3>
                 <div class="row">
-                    {% for movie in movies %}
+                    {% for movie in recommended %}
                     <div class="col-3">
-                        {{movie}}
+                        {% include "movie_thumbnail.html" %}
                     </div>
                     {% endfor %}
                 </div>
             </div>
             <div class="col-12">
                 <h3> Your favourite genres </h3>
+                {% for row in genres %}
+                <div class="row">
+                    <div class="col-12">
+                        <h5> {{ row.name }} </h5>
+                    </div>
+                    {% for movie in row.movies %}
+                    <div class="col-3">
+                        {% include 'movie_thumbnail.html' %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="col-12">
+                <h3>Similar to past watches </h3>
             </div>
         </div>
     </div>

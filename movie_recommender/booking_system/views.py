@@ -15,6 +15,7 @@ from functors.booker import Booker
 from functors.recommender import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from collections import namedtuple
 
 from datetime import date
 
@@ -132,9 +133,22 @@ def update_profile(request):
 
 
 def user_home(request):
-    movies = Movie.objects.all()[:4]
-    movie_views = [render_to_string('movie_thumbnail.html', {'movie': movie}) for movie in movies]
-    return render_with_user(request, 'user_home.html', {'movies': movie_views})
+    CF = CFRecommender()
+    PR = PopularRecommender()
+    recommended = CF.top(request.user, 10)
+    profile = UserProfile.objects.get(user=request.user)
+    prefs = profile.genre_pref.all()
+    rows = []
+    def convert(dictionary):
+        return namedtuple('GenericDict', dictionary.keys())(**dictionary)
+
+    for pref in prefs:
+        row = PR.top_by_genre(pref.genre, 4)
+        _row = {'name': pref.genre, 'movies': row}
+        rows.append(convert(_row))
+    return render_with_user(request, 'user_home.html', {'genres': rows,
+        'recommended': recommended})
+
 
 
 def home(request):
