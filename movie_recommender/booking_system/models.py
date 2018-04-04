@@ -214,3 +214,7 @@ class PredictedRating(models.Model):
 
     class Meta:
         unique_together = ['user', 'movie']
+
+    def __str__(self):
+        return '{} : {} : {}'.format(self.user.username, self.movie.title,
+                self.rating)

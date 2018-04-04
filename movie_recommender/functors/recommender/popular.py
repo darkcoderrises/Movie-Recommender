@@ -27,8 +27,10 @@ class PopularRecommender(BaseRecommender):
 
 
     def top_by_genre(self, genre, count):
+        running = self.running()
         genre = M.Genre.objects.get(genre=genre)
-        ratings = M.AggregateRating.objects.filter(movie__genres__in=[genre])
+        ratings = M.AggregateRating.objects.filter(movie__genres__in=[genre],
+                movie__in=running)
         ratings = read_frame(ratings)
         quantile = 0.85
         return self.compute(ratings, count, quantile)

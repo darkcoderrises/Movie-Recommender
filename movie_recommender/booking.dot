@@ -1,0 +1,19 @@
+digraph G {
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+
+        node [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+                shape = "record"
+        ]
+
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+        ]
+
+        Notifier [
+                label = "{Booking||+ select (booking_id,seat_id,user_id) : void\l+ deselect (booking_id,seat_id,user_id) : void\l+ retrieve (show) : List(Seats)\l+ start_booking (user,show) : Object(Booking)\l+ invoice_success (booking) : void\l+ invoice_failure (booking) : void\l+ cancel (booking) : void\l}"
+        ]
+}

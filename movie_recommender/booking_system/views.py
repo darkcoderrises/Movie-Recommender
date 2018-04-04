@@ -15,8 +15,10 @@ from functors.booker import Booker
 from functors.recommender import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from collections import namedtuple
 
 from datetime import date
+from django.db.models import Count
 
 # Create your views here.
 
@@ -132,9 +134,22 @@ def update_profile(request):
 
 
 def user_home(request):
-    movies = Movie.objects.all()[:4]
-    movie_views = [render_to_string('movie_thumbnail.html', {'movie': movie}) for movie in movies]
-    return render_with_user(request, 'user_home.html', {'movies': movie_views})
+    CF = CFRecommender()
+    PR = PopularRecommender()
+    recommended = CF.top(request.user, 10)
+    profile = UserProfile.objects.get(user=request.user)
+    prefs = profile.genre_pref.all()
+    rows = []
+    def convert(dictionary):
+        return namedtuple('GenericDict', dictionary.keys())(**dictionary)
+
+    for pref in prefs:
+        row = PR.top_by_genre(pref.genre, 3)
+        _row = {'name': pref.genre, 'movies': row}
+        rows.append(convert(_row))
+    return render_with_user(request, 'user_home.html', {'genres': rows,
+        'recommended': recommended})
+
 
 
 def home(request):
@@ -282,15 +297,23 @@ def booking_summary(request, booking_id):
 
 def movie(request, movie_id):
     try:
+        # def ordered_crew(crew):
+        #     d = {}
+        #     for c in crew.all():
+        #         # val = Movie.objects.values('crew').annotate(count=Count('id')).filter(crew=c)
+        #         val = Crew.objects.annotate(movie_count=Count('movie')).order_by('-movie_count').values('movie_count')
+        #         print(val)
+        #     pass
+        #     # Returns crew.
+
         _movie = Movie.objects.get(pk=movie_id)
+        # ordered_crew(_movie.crew)
         return render_with_user(request, 'movie.html', {"movie": _movie})
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
 
-
 def confirm_booking(request, show_id):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
-
 
 def crew(request, crew_id):
     try:
@@ -363,5 +386,11 @@ def shows(request, movie_id):
 
 
 def review(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
     reviews = Review.objects.filter(movie=movie_id)
-    return render_with_user(request, 'review.html', {"reviews": reviews})
+    return render_with_user(request, 'review.html', {"reviews": reviews, "movie" : movie})
+
+def user_review(request):
+    print(request.user.id)
+    reviews = Review.objects.filter(user=19)#request.user.id)
+    return render_with_user(request, 'user_review.html', {"reviews": reviews})
