@@ -1,32 +1,19 @@
-from rest_framework import generics
 from .models import *
 from .serializers import CrewSerializer, CrewProfile, MovieSerializer, Movie, Crew
-from django.contrib.auth import login, authenticate,logout
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.shortcuts import redirect
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from jinja2 import Environment
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseRedirect
 from django.forms.models import model_to_dict
-from django.core import serializers
-import json
-#from booking_system.models import Genre
-from django.contrib.auth.models import User
 from django.shortcuts import render
 from .filters import UserFilter
-#import django_filters
-from itertools import chain
-from .forms import UserProfileCreationForm,UpdateProfile, CustomUserCreationForm
-#from .forms import LoginForm
-from django.core.exceptions import ViewDoesNotExist
+from .forms import UpdateProfile, CustomUserCreationForm
 from functors.booker import Booker
 from functors.recommender import PopularRecommender, CBRecommender
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
-from django.views.generic.edit import FormView
 from django.contrib.auth.models import Group
 
 # Create your views here.
@@ -92,6 +79,35 @@ def search(request):
     return render_with_user(request, 'movie_list.html', {'filter': movie_filter})
 
 
+def get_booking_details(book_obj):
+    review = Review.objects.filter(user=book_obj.user, movie=book_obj.show.movie).last()
+    if review is None:
+        return {'booking': book_obj, 'review': {'rating': 0}}
+    else:
+        return {'booking': book_obj, 'review': review}
+
+
+@login_required
+def rate(request, movie_id):
+    user = request.user
+    movie = Movie.objects.get(pk=movie_id)
+    rating = request.GET.get('rating')
+
+    review, create = Review.objects.get_or_create(user=user, movie=movie)
+    review.rating = rating
+    review.save()
+
+    return JsonResponse({})
+
+
+@login_required
+def booking(request):
+    bookings = Booking.objects.filter(user=request.user)
+    booking_views = [render_to_string('booking_card.html',
+                                      get_booking_details(book_obj)) for book_obj in bookings]
+    return render_with_user(request, 'bookings.html', {'bookings': booking_views})
+
+
 @login_required
 def update_profile(request):
     args = {}
@@ -118,7 +134,8 @@ def user_home(request):
 
 
 def home(request):
-    if request.user.is_authenticated: return user_home(request)
+    if request.user.is_authenticated:
+        return user_home(request)
     return render(request, 'home.html')
 
 
