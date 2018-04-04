@@ -1,0 +1,15 @@
+<div class="container">
+    {% for theater, times in timings %}
+        <div class="row" style="margin: 20px">
+            <div class="col-sm-2" style="padding-top:8px">
+                {{theater}}
+            </div>
+            <div class="col-sm-10">
+                {% for time in times %}
+                    <a href="/book/{{time.id}}" class="btn btn-outline-secondary">{{time.time}}</a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+

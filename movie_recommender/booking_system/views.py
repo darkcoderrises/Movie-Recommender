@@ -170,13 +170,15 @@ def book_show(request, show_id):
     booker = Booker()
     show = Show.objects.get(pk=show_id)
     seats = booker.retrieve(show)
-    num_rows = len(set([i.row_id for i in seats]))
-    num_cols = len(set([i.col_id for i in seats]))
+    set_row = list(set([i.row_id for i in seats]))
+    set_col = list(set([i.col_id for i in seats]))
+    num_rows = len(set_row)
+    num_cols = len(set_col)
     matrix = [[{"selected": True} for i in range(num_rows)] for i in range(num_cols)]
 
     for seat in seats:
-        row_id = ord(seat.row_id) - ord('A')
-        col_id = int(seat.col_id) - 1
+        row_id = set_row.index(seat.row_id)
+        col_id = set_col.index(seat.col_id)
         matrix[col_id][row_id] = {
             "selected": False,
             "id": seat.id,
@@ -279,16 +281,34 @@ def shows(request, movie_id):
     # _shows = Show.objects.filter(movie=movie_id)
     movie = Movie.objects.get(pk=movie_id)
     theater_wise = {}
+    dates = set()
+    show_to_id = {}
+
     for show in movie.show_set.all():
         theater_show = show.screen.theater
         theater_wise[theater_show] = theater_wise.get(theater_show, set())
-        theater_wise[theater_show].add(show.show_time.strftime("%H:%S"))
+        theater_wise[theater_show].add(show.show_time)
+        show_to_id[(theater_show, show.show_time)] = show.id
+        dates.add(show.show_time.strftime("%d"))
 
-    for theater, timings in theater_wise.items():
-        theater_wise[theater] = sorted(timings)
-    # print (theater_wise)
+    dates = sorted(dates)
+    final_data = []
 
-    return render_with_user(request, 'shows.html', {"movie": movie,"timings": theater_wise})
+    for date in dates:
+        data = {'date': date, 'timings': []}
+
+        for theater, timings in theater_wise.items():
+            temp = [{
+                'time': time.strftime("%H:%M"),
+                'id': show_to_id[(theater, time)],
+                'date': time.strftime("%d")
+            } for time in timings]
+            temp = sorted(list(filter(lambda i: i['date'] == date, temp)), key=lambda i: i['time'])
+            if len(temp):
+                data['timings'].append((theater, temp))
+        final_data.append((date, render_to_string('show_timings.html', data)))
+
+    return render_with_user(request, 'shows.html', {"movie": movie, "timings": final_data, "dates": list(dates)})
 
 
 def review(request, movie_id):

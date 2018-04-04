@@ -1,59 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class = "card">
-	<div class="card-body">
-		<div class="row">
-			<div class="card-columns">
-				<div class="card">
-					<div class="card-body">
-						<div class="row">
-							<h3 class="card-title"> <strong>{{movie.title}}</strong> </h3>
-						</div>
-						<div class = "row">
-							<h5 class="card-title"> <strong>Language : </strong> </h5>
-							<h5 class="card-title"> {{movie.language}} </h5>
-						</div>
-						<div class = "row">
-							<h5 class="card-title"> <strong>Genre : </strong> </h5>
-							{%for g in movie.genres.all%}
-							<h5 class="card-title"> <span style = "padding-right: 10px;">{{g }} </span> </h5>
-							{%endfor%}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-{% for key, values in timings.items %}
-<div class = "card">
-	<div class="card-body">
-		<div class="row">
-			<div class="col-sm-3">
-				<div class="card">
-					<div class="card-body">
-						<div class="row">
-							<h3 class="card-title"> <strong>{{key}}</strong> </h3>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-8">
-				<div class="card">
-					<div class="card-body">
-						<div class = "row">
-							{%for time in values%}
-							<div class = "col-sm-3">
-								<h4><span style='border:1.5px black solid; font-size:25px;'>{{time}}</span></h4>
-							</div>
-							{%endfor%}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-{%endfor%}
+    <div class="container">
+       <div class="jumbotron">
+           <h1 class="display-4">{{movie.title}} ({{movie.language}}) </h1>
+           <p>{{movie.synopsis}}</p>
+           <hr class="my-4">
+           {% for genre in movie.genres.all %}
+                <button type="button" class="btn btn-outline-secondary">{{genre}}</button>
+           {% endfor %}
+           <br />
+       </div>
+
+        <div class="row" id="date_row" style="margin-left: -5px;">
+            {% for date in dates %}
+                <button style="margin-left:10px;" type="button" class="btn" id="date_{{date}}">{{date}}</button>
+            {% endfor %}
+        </div>
+
+        {% for t,v in timings %}
+            <div id="date_{{t}}_v">
+                {{v}}
+            </div>
+        {% endfor %}
+    </div>
+
+    <script type="text/javascript">
+        $(window).on('load', function (){
+            var d = $("#date_row").find("button").map(function() {return this.id}).get();
+            var curr = d[0];
+
+            d.forEach(function(v) {
+                $("#"+v+"_v").hide();
+                $('#'+v).on('click', function() {
+                    $("#"+curr+"_v").hide();
+                    $("#"+v+"_v").show();
+
+                    $('#'+curr).removeClass("btn-success");
+                    $('#'+v).addClass('btn-success');
+
+                    curr = v;
+                })
+            });
+
+            $('#'+curr).click();
+        });
+    </script>
 {% endblock %}
+
+{% block title %}
+    {{movie.title}}
+{% endblock %}
+
