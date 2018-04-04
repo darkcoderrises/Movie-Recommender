@@ -143,7 +143,7 @@ def user_home(request):
         return namedtuple('GenericDict', dictionary.keys())(**dictionary)
 
     for pref in prefs:
-        row = PR.top_by_genre(pref.genre, 4)
+        row = PR.top_by_genre(pref.genre, 3)
         _row = {'name': pref.genre, 'movies': row}
         rows.append(convert(_row))
     return render_with_user(request, 'user_home.html', {'genres': rows,
