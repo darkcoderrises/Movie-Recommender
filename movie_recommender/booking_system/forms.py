@@ -3,7 +3,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
+from crispy_forms.layout import Layout, ButtonHolder, Submit
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -20,8 +20,10 @@ class CustomUserCreationForm(UserCreationForm):
 class UpdateProfile(forms.ModelForm): 
     pass
 
+
 class UserProfileCreationForm(forms.ModelForm):
     pass
+
 
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):

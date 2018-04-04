@@ -27,6 +27,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
+from django.contrib.auth.models import Group
 
 # Create your views here.
 
@@ -59,19 +60,25 @@ def signup(request):
         form = CustomUserCreationForm()
     return render_with_user(request, 'signup.html', {'form': form})
 
+
 def signup_theaterowner(request):
     if request.method == 'POST':
-        form = TheaterOwnerCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('index')
+            my_group = Group.objects.get(name='TheaterOwnerGroup')
+            my_group.user_set.add(user)
+            user.is_staff = True
+            user.save()
+            return HttpResponseRedirect("/admin/")
     else:
-        form = TheaterOwnerCreationForm()
-    return render_with_user(request, 'signup_theaterowner.html', {'form': form})
+        form = CustomUserCreationForm()
+        form.helper.form_action = "/theater_owner/signup"
+    return render_with_user(request, 'theater_owner_signup.html', {'form': form})
 
 def search(request):
     movie_list = Movie.objects.all()
@@ -104,16 +111,14 @@ def update_profile(request):
 def user_home(request):
     return render_with_user(request, 'user_home.html', {})
 
+
 def home(request):
     if request.user.is_authenticated: return user_home(request)
     return render(request, 'home.html')
 
 
-
-
 def show_movies(request):
     movies = Movie.objects.all()
-    #movie_list = [render_with_user_to_string("movie_thumbnail.html", MovieSerializer(movie).data) for movie in queryset]
     return render_with_user(request, 'movies.html', {'movies': movies})
 
 
@@ -123,19 +128,15 @@ def show_cast(request):
 
     _crew = CrewProfile.objects.all()
     return render_with_user(request, 'cast.html', {'crews': _crew})
-    # cast = CrewProfile.objects.get(id=cast_id)
-    # cast_data = CrewSerializer(cast)
 
-    # movie_list = cast.movie_set.all()
-    # movie_list = [render_with_user_to_string("movie_thumbnail.html", MovieSerializer(movie).data) for movie in movie_list]
-
-    # return render_with_user(request, 'cast.html', {"cast": cast_data.data, "movies": movie_list})
 
 def running(request):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
+
 def upcoming(request):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
+
 
 def payment(request):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
@@ -163,6 +164,7 @@ def book_show(request, show_id):
         'matrix': matrix,
         })
 
+
 def start_booking(request, show_id):
     show = Show.objects.get(pk=show_id)
     user = request.user.userprofile
@@ -170,24 +172,28 @@ def start_booking(request, show_id):
     booking = booker.start_booking(show, user)
     return JsonResponse({"booking": model_to_dict(booking)})
 
+
 def cancel_booking(request, booking_id):
     user = request.user.userprofile
     booking = Booking.objects.get(pk=booking_id)
-    if (booking.user != user):
+    if booking.user != user:
         return JsonResponse({"success": False})
     booker = Booker()
     booker.cancel(booking)
     return JsonResponse({})
 
+
 def add_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
-    Booker.select(booker, booking_id, seat_id, request.user.userprofile.id)
+    Booker.select(booking_id, seat_id, request.user.userprofile.id)
     return JsonResponse({})
+
 
 def delete_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
     Booker.deselect(booking_id, seat_id, request.user.userprofile.id)
     return JsonResponse({})
+
 
 def proceed(request):
     booking_id = request.GET.get("booking_id")
@@ -196,6 +202,7 @@ def proceed(request):
     else:
         return JsonResponse({"success": False})
 
+
 def movie(request, movie_id):
     try:
         _movie = Movie.objects.get(pk=movie_id)
@@ -203,8 +210,10 @@ def movie(request, movie_id):
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
 
+
 def confirm_booking(request, show_id):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
+
 
 def crew(request, crew_id):
     try:
@@ -215,8 +224,10 @@ def crew(request, crew_id):
     except CrewProfile.DoesNotExist:
         return HttpResponseNotFound('<h1>Crew profile Does not exist</h1>')
 
+
 def theater(request, theater_id):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
+
 
 def popular(request):
     recommender = PopularRecommender()
@@ -225,6 +236,7 @@ def popular(request):
     return render_with_user(request, 'popular.html', {"popular": ordered})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
+
 def similar(request, movie_id):
     query = Movie.objects.get(id=movie_id)
     recommender = CBRecommender()
@@ -232,10 +244,12 @@ def similar(request, movie_id):
     return render_with_user(request, 'popular.html', {"popular": ordered})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
 
+
 def popular_by_genre(request, genre):
     recommender = PopularRecommender()
     ordered = recommender.top_by_genre(genre, 5)
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
+
 
 def shows(request, movie_id):
     # _shows = Show.objects.filter(movie=movie_id)

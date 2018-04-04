@@ -79,7 +79,6 @@ class Movie(models.Model):
     release_date = models.DateField()
     tagline = models.TextField(default="")
     imdb_id = models.CharField(unique=True, max_length=20)
-    
 
     def __str__(self):
         return self.title
@@ -92,11 +91,13 @@ class SeatType(models.Model):
     def __str__(self):
         return self.name
 
+
 class City(models.Model):
     name = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.name
+
 
 class Location(models.Model):
     name = models.CharField(max_length=100, default="")
@@ -107,12 +108,15 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+
 class Theater(models.Model):
     name = models.CharField(max_length=100, default="")
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+
     def __str__(self):
         return self.name
+
 
 class Screen(models.Model):
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
@@ -123,6 +127,7 @@ class Screen(models.Model):
 
     class Meta:
         unique_together = ['theater', 'identifier']
+
 
 class Show(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
@@ -197,6 +202,3 @@ class PredictedRating(models.Model):
 
     class Meta:
         unique_together = ['user', 'movie']
-
-
-
