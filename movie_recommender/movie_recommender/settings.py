@@ -29,6 +29,8 @@ ALLOWED_HOSTS = ['*']
 
 BROKER_URL = "redis://localhost:6379/"
 
+LOGOUT_REDIRECT_URL = "/"
+
 
 # Application definition
 
