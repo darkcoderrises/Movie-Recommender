@@ -1,4 +1,10 @@
-<div style="float: left; margin:10px; border: 1px solid black; padding : 4px; width:100px; height:100px">
-    {{name}}
-    {{synopsis}}
+<div class="row">
+    <div class="card" style="margin: 10px;">
+        <div class="card-body" >
+            <h5 class="card-title">{{movie.title}}</h5>
+            <p class="card-text">{{movie.synopsis}}</p>
+
+            <a href="/shows/{{movie.id}}" class="btn btn-primary">Book</a>
+        </div>
+    </div>
 </div>
