@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
 from datetime import date
+from django.db.models import Count
 
 # Create your views here.
 
@@ -247,15 +248,23 @@ def proceed(request):
 
 def movie(request, movie_id):
     try:
+        # def ordered_crew(crew):
+        #     d = {}
+        #     for c in crew.all():
+        #         # val = Movie.objects.values('crew').annotate(count=Count('id')).filter(crew=c)
+        #         val = Crew.objects.annotate(movie_count=Count('movie')).order_by('-movie_count').values('movie_count')
+        #         print(val)
+        #     pass
+        #     # Returns crew.
+
         _movie = Movie.objects.get(pk=movie_id)
+        # ordered_crew(_movie.crew)
         return render_with_user(request, 'movie.html', {"movie": _movie})
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
 
-
 def confirm_booking(request, show_id):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
-
 
 def crew(request, crew_id):
     try:
@@ -328,5 +337,11 @@ def shows(request, movie_id):
 
 
 def review(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
     reviews = Review.objects.filter(movie=movie_id)
-    return render_with_user(request, 'review.html', {"reviews": reviews})
+    return render_with_user(request, 'review.html', {"reviews": reviews, "movie" : movie})
+
+def user_review(request):
+    print(request.user.id)
+    reviews = Review.objects.filter(user=19)#request.user.id)
+    return render_with_user(request, 'user_review.html', {"reviews": reviews})

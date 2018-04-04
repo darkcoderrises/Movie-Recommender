@@ -1,44 +1,100 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for review in reviews%}
 <div class = "card">
-	<div class="card-body">
-		<div class="row">
-			<div class="col-sm-4">
-				<div class="card">
-					<!-- <img class="card-img-top" src="/static/images/crew.png" alt="Card image cap"> -->
-					<div class="card-body">
-						<div class="row">
-							<h3 class="card-title"> {{review.user}} </h3>
-						</div>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="card">
+			  <img class="card-img-top" src="/static/images/movie_detail.png" alt="Card image cap">
+			  <div class="card-body">
+			    <h3 class="card-title"> <strong>{{movie.title}}</strong> </h3>
+			    <p class="card-text">{{movie.tagline}}</p>
+			  </div>
+			  <ul class="list-group list-group-flush">
+			    <li class="list-group-item"><button type="button" class="btn btn-outline-secondary">{{movie.language}}</button></li>
+			    <li class="list-group-item">
+			    	{% for genre in movie.genres.all %}
+			    	<button type="button" class="btn btn-outline-secondary">{{genre}}</button>
+			    	{%endfor%}
+			    </li>
+			  </ul>
+			  <div class="card-body">
+			    <a href="../../shows/{{movie.id}}" class="btn btn-large btn-info">Shows</a>
+			  </div>
+		</div>
+	</div>
+	<div class="col-sm-8">
+		<div class="card">
+			<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+   			 	<li class="nav-item">
+   			 		<a class="nav-link active" href="../../movie/{{movie.id}}">Summary</a>
+   			 	</li>
+   			 	<li class="nav-item">
+   			 		<a class="nav-link active" href="../../review/{{movie.id}}">User Review</a>
+   			 	</li>
+   			 </ul>
+   			</div>	
+			<div class="card-body">
+				<div class="row">
+					{% for review in reviews%}
+					<div class="card bg-light mb-3" style="max-width: 18rem;">
+					  <div class="card-header">{{review.user}}</div>
+					  <div class="card-body">
+					    <h5 class="card-title">
+					    	<div class="col-sm-4" style="padding: 10px;">
+							    <center>
+							      
+							        <div class="br-wrapper br-theme-fontawesome-stars" style="margin: 10px;">
+							            <div id="value-rating-{{review.user.id}}"></div>
+							            <select id="rating-{{review.user.id}}">
+							                <option value="1">1</option>
+							                <option value="2">2</option>
+							                <option value="3">3</option>
+							                <option value="4">4</option>
+							                <option value="5">5</option>
+							            </select>
+							        </div>
+							        
+							    </center>
+							</div>
+
+							<script type="text/javascript">
+							    $(function() {
+							        var rating = 0;
+							        $('#rating-{{review.user.id}}')
+							            .barrating('show', {
+							                theme: 'fontawesome-stars',
+							                initialRating: '{{review.rating}}',
+							                onSelect: function(value, text, event) {
+							                    $('#value-rating-{{review.user.id}}').text(value);
+							                    rating = value;
+							                },
+							            });
+
+							        $('#submit-rating-{{review.user.id}}').on('click', function () {
+							            if (rating === 0) {
+							                return;
+							            }
+							            $.ajax({
+							                url: 'http://localhost:8000/rate/{{review.user.show.movie.id}}',
+							                data: {
+							                    csrfmiddlewaretoken: '{{ csrf_token }}',
+							                    rating: rating,
+							                },
+							            });
+							        })
+							    });
+							</script>
+					    </h5>
+					    <p class="card-text">{{review.description}}</p>
+					  </div>
 					</div>
+					{% endfor %}
 				</div>
 			</div>
-			<div class="col-sm-8">
-				<div class="card">
-					<div class="card-body">
-						<div class = "row">
-							<h4> <strong>Rating :</strong> </h4>
-							<h4>{{review.rating}}</h4>
-							<div class="star-rating">
-								<span class="fa fa-star-o" data-rating="1"></span>
-						        <span class="fa fa-star-o" data-rating="2"></span>
-						        <span class="fa fa-star-o" data-rating="3"></span>
-						        <span class="fa fa-star-o" data-rating="4"></span>
-						        <span class="fa fa-star-o" data-rating="5"></span>
-						        <input type="hidden" name="rating" class="rating-value" value="4">
-						    </div>
-						</div>
-						<div class = "row">
-							<h4> <strong>Description :</strong> </h4>
-							<h4>{{review.description}}</h4>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div	>
+		</div>
 	</div>
 </div>
-{%endfor%}
+</div>
 {% endblock %}

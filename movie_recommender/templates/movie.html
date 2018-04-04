@@ -3,27 +3,23 @@
 {% block content %}
 <div class="row">
 	<div class="col-sm-4">
-		<div class="card">
-			<img class="card-img-top" src="/static/images/movie_detail.png" alt="Card image cap">
-			<div class="card-body">
-				<div class="row">
-					<h3 class="card-title"> <strong>{{movie.title}}</strong> </h3>
-				</div>
-				<div class="row">
-					<h5><span style='border:1px black solid; font-size:20px;'>{{movie.language}}</span></h5>
-				</div>
-				<div class="row">
-					{% for genre in movie.genres.all %}
-					<div class="card-columns">
-					<p><span style='border:1px black solid; font-size:20px;' >{{genre}}</span></p>
-					</div>
-					{% endfor %}
-				</div>
-				<div class="row">
-					<!-- <button type="button" class="btn btn-primary btn-md"><a href="../../shows/{{movie.id}}">Shows</a></button> -->
-					<a class="btn btn-large btn-info" href="../../shows/{{movie.id}}">Shows</a>
-				</div>
-			</div>
+		<div class="card" style="width: 18rem;">
+			  <img class="card-img-top" src="/static/images/movie_detail.png" alt="Card image cap">
+			  <div class="card-body">
+			    <h3 class="card-title"> <strong>{{movie.title}}</strong> </h3>
+			    <p class="card-text">{{movie.tagline}}</p>
+			  </div>
+			  <ul class="list-group list-group-flush">
+			    <li class="list-group-item"><button type="button" class="btn btn-outline-secondary">{{movie.language}}</button></li>
+			    <li class="list-group-item">
+			    	{% for genre in movie.genres.all %}
+			    	<button type="button" class="btn btn-outline-secondary">{{genre}}</button>
+			    	{%endfor%}
+			    </li>
+			  </ul>
+			  <div class="card-body">
+			    <a href="../../shows/{{movie.id}}" class="btn btn-large btn-info">Shows</a>
+			  </div>
 		</div>
 	</div>
 	<div class="col-sm-8">
@@ -31,10 +27,10 @@
 			<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs">
    			 	<li class="nav-item">
-   			 		<a class="nav-link active" href="#">Summary</a>
+   			 		<a class="nav-link active" href="../../movie/{{movie.id}}">Summary</a>
    			 	</li>
    			 	<li class="nav-item">
-   			 		<a class="nav-link active" href="#">User Review</a>
+   			 		<a class="nav-link active" href="../../review/{{movie.id}}">User Review</a>
    			 	</li>
    			 </ul>
    			</div>	
@@ -47,11 +43,9 @@
 					<h5 class="card-title"><strong>Crew</strong></h5>
 				</div>
 				<div class="row">
-					<!-- <p> {{movie.crew.all}}</p> -->
 					{% for crew in movie.crew.all %}
 					<div class="col-sm-3">
 						<div class="card">
-							<!-- <h1> {{crew.id}} </h1> -->
 							<img class="card-img-top" src="/static/images/crew.png" alt="Card image cap">
 							<h5 class="text-center"> <a href="../../crew/{{crew.profile.id}}">{{crew.profile}}</a> </h5>
 						</div>

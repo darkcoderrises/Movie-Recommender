@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+	{% for review in reviews%}
+	<div class="card bg-light mb-4" style="max-width: 18rem;">
+	  <div class="card-header">{{review.movie}}</div>
+	  <div class="card-body">
+	    <div class="col-sm-3" style="padding: 10px;">
+			    <center>
+			        <div class="br-wrapper br-theme-fontawesome-stars" style="margin: 10px;">
+			            <div id="value-rating-{{review.movie.id}}"></div>
+			            <select id="rating-{{review.movie.id}}">
+			                <option value="1">1</option>
+			                <option value="2">2</option>
+			                <option value="3">3</option>
+			                <option value="4">4</option>
+			                <option value="5">5</option>
+			            </select>
+			        </div>
+			        
+			    </center>
+			</div>
+
+			<script type="text/javascript">
+			    $(function() {
+			        var rating = 0;
+			        $('#rating-{{review.movie.id}}')
+			            .barrating('show', {
+			                theme: 'fontawesome-stars',
+			                initialRating: '{{review.rating}}',
+			                onSelect: function(value, text, event) {
+			                    $('#value-rating-{{review.movie.id}}').text(value);
+			                    rating = value;
+			                },
+			            });
+
+			        $('#submit-rating-{{review.movie.id}}').on('click', function () {
+			            if (rating === 0) {
+			                return;
+			            }
+			            $.ajax({
+			                url: 'http://localhost:8000/rate/{{review.user.show.movie.id}}',
+			                data: {
+			                    csrfmiddlewaretoken: '{{ csrf_token }}',
+			                    rating: rating,
+			                },
+			            });
+			        })
+			    });
+			</script>
+	    <p class="card-text">{{review.description}}</p>
+	  </div>
+	</div>
+	{% endfor %}
+</div>
+
+{% endblock %}
