@@ -1,5 +1,5 @@
 from .models import *
-from .serializers import CrewSerializer, CrewProfile, MovieSerializer, Movie, Crew
+from .serializers import CrewProfile, Movie, Crew
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -17,9 +17,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from collections import namedtuple
 from functors.notifier import Notifier
+from django.conf import settings
 
 from datetime import date
-from django.db.models import Count
 
 # Create your views here.
 
@@ -35,6 +35,7 @@ def environment(**options):
 
 def render_with_user(request, template_name, args):
     args['user'] = request.user
+    args['home_url'] = settings.HOME_URL
     return render(request, template_name, args)
 
 
@@ -197,7 +198,7 @@ def upcoming(request):
 def dummy_gateway(request):
     amount = request.GET.get('amount', 0)
     id = request.GET.get('id', 0)
-    hit_url = request.GET.get('hit_url', 'http://localhost:8000/payment')
+    hit_url = request.GET.get('hit_url', settings.HOME_URL + '/payment')
 
     return render(request, 'dummy_gateway.html', {'amount': amount, 'id': id, 'hit_url': hit_url})
 

@@ -33,7 +33,7 @@
                 return;
             }
             $.ajax({
-                url: 'http://localhost:8000/rate/{{booking.show.movie.id}}',
+                url: '{{home_url}}/rate/{{booking.show.movie.id}}',
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     rating: rating,

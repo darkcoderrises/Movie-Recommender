@@ -40,7 +40,7 @@
 			                return;
 			            }
 			            $.ajax({
-			                url: 'http://localhost:8000/rate/{{review.user.show.movie.id}}',
+			                url: '{{home_url}}/rate/{{review.user.show.movie.id}}',
 			                data: {
 			                    csrfmiddlewaretoken: '{{ csrf_token }}',
 			                    rating: rating,

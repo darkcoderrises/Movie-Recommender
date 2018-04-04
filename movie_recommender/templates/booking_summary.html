@@ -51,14 +51,14 @@
     $(window).on('load', function() {
         $('#proceed').on('click', function () {
             confirmed = 1;
-            window.location.href = 'http://localhost:8000/dummy_gateway?amount={{invoice.total_price}}&id={{booking.id}}';
+            window.location.href = '{{home_url}}/dummy_gateway?amount={{invoice.total_price}}&id={{booking.id}}';
         });
     });
 
     $(window).on('beforeunload', function() {
         if (confirmed === 1) return;
       $.ajax({
-        url: "http://localhost:8000/cancel_booking/{{booking.id}}",
+        url: "{{home_url}}/cancel_booking/{{booking.id}}",
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
           booking_id: "{{booking.id}}",
