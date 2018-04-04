@@ -40,4 +40,5 @@ urlpatterns = [
     path('preferences/', views.update_profile, name="update_preferences"),
     path('bookings/', views.booking, name="bookings"),
     path('rate/<int:movie_id>', views.rate, name="rate"),
+    path('review/<int:movie_id>/', views.review, name="user_reviews"),
 ]
