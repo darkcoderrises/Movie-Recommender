@@ -201,6 +201,22 @@ def dummy_gateway(request):
     return render(request, 'dummy_gateway.html', {'amount': amount, 'id': id, 'hit_url': hit_url})
 
 
+@login_required
+def booking_detail(request, booking_id):
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        if booking.user != request.user:
+            raise Exception
+        review = Review.objects.filter(movie=booking.show.movie, user=booking.user).last()
+        rev_data = {'rating': 0}
+        if review:
+            rev_data = review
+        return render(request, 'booking_detail.html', {'booking': booking, 'review': rev_data})
+    except Exception as E:
+        print(E)
+        return redirect('index')
+
+
 def payment(request):
     booking_id = request.GET.get('id')
     success = request.GET.get('success')
@@ -312,8 +328,10 @@ def movie(request, movie_id):
     except Movie.DoesNotExist:
         return HttpResponseNotFound('<h1>Movie Does not exist</h1>')
 
+
 def confirm_booking(request, show_id):
     return HttpResponseNotFound('<h1>Page under construction?</h1>')
+
 
 def crew(request, crew_id):
     try:
@@ -389,6 +407,7 @@ def review(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
     reviews = Review.objects.filter(movie=movie_id)
     return render_with_user(request, 'review.html', {"reviews": reviews, "movie" : movie})
+
 
 def user_review(request):
     print(request.user.id)

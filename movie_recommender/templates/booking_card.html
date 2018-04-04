@@ -6,7 +6,7 @@
                 <h6 class="card-subtitle mb-2 text-muted">{{booking.show.screen.theater.name}}, {{booking.show.screen.theater.location}}</h6>
                 <h6 class="card-subtitle mb-2">{{booking.show.show_time|date:"H:i | d-b-y"}}</h6>
 
-                Invoice status : {{booking.invoice.status.name}}
+                Invoice status : <a href="/booking_detail/{{booking.id}}/">{{booking.invoice.status.name}}</a>
                 <br />
                 Seats: <b>{{booking.seats.all.first.seat_type.name}}</b>
                 {% for seat in booking.seats.all %}

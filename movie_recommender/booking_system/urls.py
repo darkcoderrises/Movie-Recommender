@@ -44,4 +44,5 @@ urlpatterns = [
     path('booking_summary/<int:booking_id>/', views.booking_summary, name="booking_summary"),
     path('dummy_gateway/', views.dummy_gateway, name="dummy_gateway"),
     path('user_review', views.user_review, name="user_specific_review"),
+    path('booking_detail/<int:booking_id>/', views.booking_detail, name="booking_detail"),
 ]
