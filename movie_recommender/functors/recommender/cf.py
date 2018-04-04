@@ -4,12 +4,13 @@ from django_pandas.io import read_frame
 import pandas as pd
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
+from .base import BaseRecommender
 
-class CFRecommender:
+class CFRecommender(BaseRecommender):
     def top(self, user, count):
         movies = self.running()
         bookings = M.Booking.objects.filter(user=user)
-        booked_movies = list(map(lambda x: x.movie, bookings))
+        booked_movies = list(map(lambda x: x.show.movie, bookings))
         ratings = M.PredictedRating.objects.filter(user=user,
                     movie__in=movies
                 ).order_by('rating'
@@ -52,13 +53,6 @@ class CFRecommender:
             rating.save()
             
 
-    def running(self):
-        now = datetime.today()
-        # Find all movies with running shows after today. (RMs)
-        movie_ids = M.Show.objects.filter(show_time__gt=now).values_list('movie',
-                flat=True).distinct()
-        movies = list(map(lambda x: M.Movie.objects.get(pk=x), movie_ids))
-        return movies
 
 
     def special(self):

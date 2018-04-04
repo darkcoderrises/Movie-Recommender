@@ -3,9 +3,10 @@ from django_pandas.io import read_frame
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 import pandas as pd
+from .base import BaseRecommender
 
 
-class CBRecommender:
+class CBRecommender(BaseRecommender):
     def top(self, query):
         results =  M.Similar.objects.filter(query=query).order_by('rank')
         movies = []

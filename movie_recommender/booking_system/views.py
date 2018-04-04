@@ -16,6 +16,8 @@ from functors.recommender import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
+from datetime import date
+
 # Create your views here.
 
 
@@ -138,7 +140,18 @@ def user_home(request):
 def home(request):
     if request.user.is_authenticated:
         return user_home(request)
-    return render(request, 'home.html')
+
+    # Setup things for home.
+    from functors.recommender import PopularRecommender
+    PR = PopularRecommender()
+    worldwide = PR.top(10)
+    city_id = request.GET.get('city', '')
+    city = []
+    if city_id:
+        city = PR.top_by_city(city_id, 10)
+
+    return render(request, 'home.html', {'worldwide': worldwide, 'city':
+        city})
 
 
 def show_movies(request):
@@ -159,7 +172,10 @@ def running(request):
 
 
 def upcoming(request):
-    return HttpResponseNotFound('<h1>Page under construction?</h1>')
+    # movies = Movie.objects.filter(release_date__gte=date.today())
+    movies = Movie.objects.filter(release_date__gte=date(1995, 4, 1)) #testing
+    # print(movies)
+    return render_with_user(request, 'movies.html', {'movies': movies})
 
 
 def payment(request):

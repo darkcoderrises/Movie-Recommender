@@ -1,10 +1,12 @@
 import booking_system.models as M
 from django_pandas.io import read_frame
+from .base import BaseRecommender
 
-class PopularRecommender:
+class PopularRecommender(BaseRecommender):
 
     def top(self, count):
-        ratings = M.AggregateRating.objects.all()
+        running = self.running()
+        ratings = M.AggregateRating.objects.filter(movie__in=running)
         ratings = read_frame(ratings)
         quantile = 0.95
         return self.compute(ratings, count, quantile)
@@ -15,6 +17,13 @@ class PopularRecommender:
             movie = M.Movie.objects.get(id=ql["movie"])
             result.append(movie)
         return result
+
+    def top_by_city(self, city, count):
+        local = self.local(city)
+        ratings = M.AggregateRating.objects.filter(movie__in=local)
+        ratings = read_frame(ratings)
+        quantile = 0.55
+        return self.compute(ratings, count, quantile)
 
 
     def top_by_genre(self, genre, count):
