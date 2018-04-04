@@ -16,6 +16,8 @@ from functors.recommender import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
+from datetime import date
+
 # Create your views here.
 
 
@@ -159,7 +161,10 @@ def running(request):
 
 
 def upcoming(request):
-    return HttpResponseNotFound('<h1>Page under construction?</h1>')
+    # movies = Movie.objects.filter(release_date__gte=date.today())
+    movies = Movie.objects.filter(release_date__gte=date(1995, 4, 1)) #testing
+    # print(movies)
+    return render_with_user(request, 'movies.html', {'movies': movies})
 
 
 def payment(request):
