@@ -38,4 +38,5 @@ urlpatterns = [
     path('shows/<int:movie_id>', views.shows, name='shows'),
     path('theater_owner/signup', views.signup_theaterowner, name="theater_sign"),
     path('preferences/', views.update_profile, name="update_preferences"),
+    path('review/<int:movie_id>/', views.review, name="user_reviews"),
 ]

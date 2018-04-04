@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for review in reviews%}
+<div class = "card">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="card">
+					<!-- <img class="card-img-top" src="/static/images/crew.png" alt="Card image cap"> -->
+					<div class="card-body">
+						<div class="row">
+							<h3 class="card-title"> {{review.user}} </h3>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="card">
+					<div class="card-body">
+						<div class = "row">
+							<h4> <strong>Rating :</strong> </h4>
+							<h4>{{review.rating}}</h4>
+							<div class="star-rating">
+								<span class="fa fa-star-o" data-rating="1"></span>
+						        <span class="fa fa-star-o" data-rating="2"></span>
+						        <span class="fa fa-star-o" data-rating="3"></span>
+						        <span class="fa fa-star-o" data-rating="4"></span>
+						        <span class="fa fa-star-o" data-rating="5"></span>
+						        <input type="hidden" name="rating" class="rating-value" value="4">
+						    </div>
+						</div>
+						<div class = "row">
+							<h4> <strong>Description :</strong> </h4>
+							<h4>{{review.description}}</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div	>
+	</div>
+</div>
+{%endfor%}
+{% endblock %}

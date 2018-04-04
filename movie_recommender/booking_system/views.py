@@ -271,3 +271,7 @@ def shows(request, movie_id):
 
     return render_with_user(request, 'shows.html', {"movie": movie,"timings": theater_wise})
     # return HttpResponseNotFound('<h1>Page under construction?</h1>')
+
+def review(request, movie_id):
+    reviews = Review.objects.filter(movie=movie_id)
+    return render_with_user(request, 'review.html', {"reviews": reviews})
