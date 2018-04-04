@@ -12,9 +12,11 @@ from django.shortcuts import render
 from .filters import UserFilter
 from .forms import UpdateProfile, CustomUserCreationForm
 from functors.booker import Booker
-from functors.recommender import PopularRecommender, CBRecommender
+from functors.recommender import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+
+from datetime import date
 
 # Create your views here.
 
@@ -130,7 +132,9 @@ def update_profile(request):
 
 
 def user_home(request):
-    return render_with_user(request, 'user_home.html', {})
+    movies = Movie.objects.all()[:4]
+    movie_views = [render_to_string('movie_thumbnail.html', {'movie': movie}) for movie in movies]
+    return render_with_user(request, 'user_home.html', {'movies': movie_views})
 
 
 def home(request):
@@ -168,7 +172,10 @@ def running(request):
 
 
 def upcoming(request):
-    return HttpResponseNotFound('<h1>Page under construction?</h1>')
+    # movies = Movie.objects.filter(release_date__gte=date.today())
+    movies = Movie.objects.filter(release_date__gte=date(1995, 4, 1)) #testing
+    # print(movies)
+    return render_with_user(request, 'movies.html', {'movies': movies})
 
 
 def payment(request):
@@ -298,7 +305,7 @@ def shows(request, movie_id):
     # print (theater_wise)
 
     return render_with_user(request, 'shows.html', {"movie": movie,"timings": theater_wise})
-    # return HttpResponseNotFound('<h1>Page under construction?</h1>')
+
 
 def review(request, movie_id):
     reviews = Review.objects.filter(movie=movie_id)
