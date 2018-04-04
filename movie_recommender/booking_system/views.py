@@ -118,7 +118,7 @@ def update_profile(request):
     args = {}
 
     if request.method == 'POST':
-        form = UpdateProfile(request.POST, instance=request.user)
+        form = UpdateProfile(request.POST, instance=request.user.userprofile)
         form.actual_user = request.user
         if form.is_valid():
             p = form.save(commit=False)
@@ -126,8 +126,8 @@ def update_profile(request):
             p.save()
             return redirect('index')
     else:
-        form = UpdateProfile()
-        #TODO base values
+        form = UpdateProfile(initial=model_to_dict(request.user.userprofile))
+        print(form)
 
     args['form'] = form
     args['user'] = request.user
