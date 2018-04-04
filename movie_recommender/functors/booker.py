@@ -13,6 +13,7 @@ def t_select(booking_id, seat_id, user_id):
         if Booking.objects.filter(show=booking.show, seats__id=seat_id).count():
             return booking.delete()
         booking.seats.add(Seat.objects.get(pk=seat_id))
+        booking.invoice.calculate()
         return booking.save()
 
 @app.task
@@ -22,6 +23,7 @@ def t_deselect(booking_id, seat_id, user_id):
         if booking.user.id != user_id or booking.invoice.status.name != "In Progress":
             return
         booking.seats.remove(Seat.objects.get(pk=seat_id))
+        booking.invoice.calculate()
         return booking.save()
 
 

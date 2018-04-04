@@ -166,6 +166,17 @@ class Invoice(models.Model):
     total_price = models.FloatField(default=0)
     status = models.ForeignKey(StatusType, on_delete=models.CASCADE, default=0)
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.ticket_price = sum(map(lambda i: i.seat_type.price, self.booking.seats.all()))
+        self.taxes = 0.10 * self.ticket_price
+        self.service_charge = 0.10 * self.ticket_price
+        self.total_price = self.ticket_price + self.taxes + self.service_charge
+        super(Invoice, self).save(force_insert, force_update, using, update_fields)
+
+    def calculate(self):
+        self.save()
+
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

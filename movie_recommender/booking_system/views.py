@@ -246,6 +246,11 @@ def proceed(request):
         return JsonResponse({"success": False})
 
 
+def booking_summary(request, booking_id):
+    booking = Booking.objects.get(pk=booking_id)
+    return render_with_user(request, "booking_summary.html", {'booking': booking, 'invoice': booking.invoice, 'show': booking.show, 'movie': booking.show.movie})
+
+
 def movie(request, movie_id):
     try:
         _movie = Movie.objects.get(pk=movie_id)

@@ -41,4 +41,5 @@ urlpatterns = [
     path('bookings/', views.booking, name="bookings"),
     path('rate/<int:movie_id>', views.rate, name="rate"),
     path('review/<int:movie_id>/', views.review, name="user_reviews"),
+    path('booking_summary/<int:booking_id>/', views.booking_summary, name="booking_summary"),
 ]

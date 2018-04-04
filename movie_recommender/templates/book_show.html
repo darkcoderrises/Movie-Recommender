@@ -111,7 +111,11 @@
           },
           success: function(result) {
             confirmed = result.success;
-            console.log(result);
+            if (confirmed) {
+                window.location.href = "http://localhost:8000/booking_summary/" + booking_id;
+            } else {
+                alert('Something went wrong');
+            }
           },
           error: function() {
             alert('Something went wrong');
