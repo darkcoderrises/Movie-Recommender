@@ -1,0 +1,39 @@
+digraph G {
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+
+        node [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+                shape = "record"
+        ]
+
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+        ]
+
+        Base_Recommender [
+                label = "{Base||+ local (city_id) : list(movies)\l+ running() : list(movies)\l}"
+        ]
+
+        Content_Recommender [
+                label = "{Content_Recommender||+ top (query) : list(movies)\l+ compute() : void\l}"
+        ]
+
+        Popular_Recommender [
+                label = "{Popular_Recommender||+ top (count) : list(movies)\l+ compute (count,quantile) : list(movies)\l+ query_set (qualified) : list(movies)\l+ top_by_genre (genre,count) : list(movies)\l+ top_by_city (city,count) : list(movies)\l}"
+        ]
+
+        CollabFilter_Recommender [
+                label = "{CollabFilter_Recommender||+ top (user,count) : list(movies)\l+ compute() : void\l+ set_rating (user,movie,r) : void\l}"
+        ]
+
+        edge [
+                arrowhead = "empty"
+        ]
+
+        Content_Recommender -> Base_Recommender
+        Popular_Recommender -> Base_Recommender
+        CollabFilter_Recommender -> Base_Recommender
+}
