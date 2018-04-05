@@ -445,6 +445,7 @@ def review(request, movie_id):
 
 
 def user_review(request):
-    print(request.user.id)
-    reviews = Review.objects.filter(user=19)#request.user.id)
+    # print(request.user.id)
+    # reviews = Review.objects.filter(user=19)#request.user.id)
+    reviews = Review.objects.filter(user=request.user)
     return render_with_user(request, 'user_review.html', {"reviews": reviews})

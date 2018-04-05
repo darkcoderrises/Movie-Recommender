@@ -7,6 +7,7 @@ class PopularRecommender(BaseRecommender):
     def top(self, count):
         running = self.running()
         ratings = M.AggregateRating.objects.filter(movie__in=running)
+        if not ratings: return []
         ratings = read_frame(ratings)
         quantile = 0.95
         return self.compute(ratings, count, quantile)
