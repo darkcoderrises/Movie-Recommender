@@ -18,7 +18,7 @@ from django.contrib.auth.models import Group
 from collections import namedtuple
 from functors.notifier import Notifier
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist#, RelatedObjectDoesNotExist
 
 from datetime import date
 
@@ -131,7 +131,12 @@ def update_profile(request):
     args = {}
 
     if request.method == 'POST':
-        form = UpdateProfile(request.POST, instance=request.user.userprofile)
+        try:
+            form = UpdateProfile(request.POST, instance=request.user.userprofile)
+        except ObjectDoesNotExist:
+            profile = UserProfile(user=request.user,
+                    gender=Gender.objects.all().first())
+            form = UpdateProfile(request.POST, instance=profile)
         form.actual_user = request.user
         if form.is_valid():
             p = form.save(commit=False)
@@ -155,6 +160,8 @@ def update_profile(request):
 def user_home(request):
     CF = CFRecommender()
     PR = PopularRecommender()
+    CB = CBRecommender()
+    similar_movies = CB.top(request.user, 10)
     recommended = CF.top(request.user, 10)
     try:
         profile = UserProfile.objects.get(user=request.user)
@@ -168,7 +175,7 @@ def user_home(request):
             _row = {'name': pref.genre, 'movies': row}
             rows.append(convert(_row))
         return render_with_user(request, 'user_home.html', {'genres': rows,
-            'recommended': recommended})
+            'recommended': recommended, 'similar': similar})
     except ObjectDoesNotExist:
         return anonymous_home(request)
 

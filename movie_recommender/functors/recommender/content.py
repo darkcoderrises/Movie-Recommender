@@ -8,7 +8,9 @@ from .base import BaseRecommender
 
 class CBRecommender(BaseRecommender):
     def top(self, query):
-        results =  M.Similar.objects.filter(query=query).order_by('rank')
+        running = self.running()
+        results =  M.Similar.objects.filter(query=query,
+                similar_to_in=running).order_by('rank')
         movies = []
         for result in results:
             movies.append(result.similar_to)

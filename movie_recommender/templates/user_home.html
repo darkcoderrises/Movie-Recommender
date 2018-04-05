@@ -17,6 +17,13 @@
                     {% endfor %}
                 </div>
                 <h3>Similar to past watches </h3>
+                <div class="row">
+                    {% for movie in similar %}
+                    <div class="col-3">
+                        {% include "movie_thumbnail.html" %}
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
