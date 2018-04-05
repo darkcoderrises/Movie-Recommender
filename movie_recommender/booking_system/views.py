@@ -260,6 +260,7 @@ def payment(request):
         return redirect('index')
 
 
+@login_required
 def book_show(request, show_id):
     booker = Booker()
     show = Show.objects.get(pk=show_id)
