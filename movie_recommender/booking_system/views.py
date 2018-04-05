@@ -160,8 +160,19 @@ def update_profile(request):
 def user_home(request):
     CF = CFRecommender()
     PR = PopularRecommender()
+    def user_bookings(user):
+        bookings = Booking.objects.filter(user=user)
+        movies = []
+        for booking in bookings:
+            movies.append(booking.show.movie)
+        return movies
+
     CB = CBRecommender()
-    similar_movies = CB.top(request.user, 10)
+    similar_movies = []
+    for movie in user_bookings(request.user):
+        similar = CB.top(movie, 10)
+        similar_movies.extend(similar)
+
     recommended = CF.top(request.user, 10)
     try:
         profile = UserProfile.objects.get(user=request.user)
@@ -175,7 +186,7 @@ def user_home(request):
             _row = {'name': pref.genre, 'movies': row}
             rows.append(convert(_row))
         return render_with_user(request, 'user_home.html', {'genres': rows,
-            'recommended': recommended, 'similar': similar})
+            'recommended': recommended, 'similar': similar_movies})
     except ObjectDoesNotExist:
         return anonymous_home(request)
 

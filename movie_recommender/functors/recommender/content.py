@@ -7,14 +7,15 @@ from .base import BaseRecommender
 
 
 class CBRecommender(BaseRecommender):
-    def top(self, query):
+    def top(self, query, count):
         running = self.running()
         results =  M.Similar.objects.filter(query=query,
-                similar_to_in=running).order_by('rank')
+                similar_to__in=running).order_by('rank')
         movies = []
         for result in results:
             movies.append(result.similar_to)
-        return movies
+        n = min(len(movies, count))
+        return movies[:n]
     
 
     def compute(self):
