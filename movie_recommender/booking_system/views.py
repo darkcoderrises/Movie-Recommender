@@ -108,10 +108,21 @@ def rate(request, movie_id):
 
 @login_required
 def booking(request):
-    bookings = Booking.objects.filter(user=request.user)
-    booking_views = [render_to_string('booking_card.html',
-                                      get_booking_details(book_obj)) for book_obj in bookings]
-    return render_with_user(request, 'bookings.html', {'bookings': booking_views})
+    bookings = Booking.objects.filter(user=request.user).order_by('-show__show_time')
+    done_views = []
+    new_views = []
+
+    for book_obj in bookings:
+        if book_obj.show.show_time.date() < date(2018, 4, 2):
+            view = render_to_string('booking_card.html', get_booking_details(book_obj))
+            done_views.append(view)
+        else:
+            data = get_booking_details(book_obj)
+            data['hide'] = True
+            view = render_to_string('booking_card.html', data)
+            new_views.append(view)
+
+    return render_with_user(request, 'bookings.html', {'done_views': done_views, 'new_views': new_views})
 
 
 @login_required
@@ -151,7 +162,6 @@ def user_home(request):
         rows.append(convert(_row))
     return render_with_user(request, 'user_home.html', {'genres': rows,
         'recommended': recommended})
-
 
 
 def home(request):

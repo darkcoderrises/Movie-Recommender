@@ -18,5 +18,7 @@
         </div>
     </div>
 
-    {% include 'rate_card.html' %}
+    {% if not hide %}
+        {% include 'rate_card.html' %}
+    {% endif %}
 </div>
