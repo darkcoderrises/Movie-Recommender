@@ -307,13 +307,13 @@ def cancel_booking(request, booking_id):
 
 def add_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
-    Booker.select(booking_id, seat_id, request.user.userprofile.id)
+    Booker.select(booking_id, seat_id, request.user.id)
     return JsonResponse({})
 
 
 def delete_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
-    Booker.deselect(booking_id, seat_id, request.user.userprofile.id)
+    Booker.deselect(booking_id, seat_id, request.user.id)
     return JsonResponse({})
 
 
