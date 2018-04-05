@@ -22,6 +22,7 @@ class PopularRecommender(BaseRecommender):
     def top_by_city(self, city, count):
         local = self.local(city)
         ratings = M.AggregateRating.objects.filter(movie__in=local)
+        if not ratings: return []
         ratings = read_frame(ratings)
         quantile = 0.55
         return self.compute(ratings, count, quantile)
@@ -32,6 +33,7 @@ class PopularRecommender(BaseRecommender):
         genre = M.Genre.objects.get(genre=genre)
         ratings = M.AggregateRating.objects.filter(movie__genres__in=[genre],
                 movie__in=running)
+        if not ratings: return []
         ratings = read_frame(ratings)
         quantile = 0.85
         return self.compute(ratings, count, quantile)
