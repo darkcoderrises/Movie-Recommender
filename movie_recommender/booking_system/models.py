@@ -1,10 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-#from django.forms import extras
-import birthday
-from django import forms
-from dobwidget import DateOfBirthWidget
 import datetime
+
 
 class CastType(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -54,9 +51,7 @@ class Genre(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    #age = models.IntegerField(default=0)
     date = models.DateField(auto_now=False, default=datetime.date.today)
-    #birthday = birthday.fields.BirthdayField()
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, default=0)
     phone = models.CharField(default="", max_length=10)
     genre_pref = models.ManyToManyField(Genre)
