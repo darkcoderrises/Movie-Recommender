@@ -173,14 +173,14 @@ class Command(BaseCommand):
     def _seed_seat(self):
         M.Seat.objects.all().delete()
         _screens = list(M.Screen.objects.all())
-        # _rows = list(map(chr, range(ord('A'), ord('N')+1))) # rows from A - N
-        # _columns = list(range(1,11)) # columns from 1 - 10
-        _rows = list(map(chr, range(ord('A'), ord('D')+1))) # rows from A - D
-        _columns = list(range(1,4)) # columns from 1 - 3
+        _rows = list(map(chr, range(ord('A'), ord('N')+1))) # rows from A - N
+        _columns = list(range(1,11)) # columns from 1 - 10
+        # _rows = list(map(chr, range(ord('A'), ord('D')+1))) # rows from A - D
+        # _columns = list(range(1,4)) # columns from 1 - 3
         # A - K "Regular seats"
         for _screen in _screens:
-            mn_row, mx_row = 3, 4 # 4, 14
-            mn_col, mx_col = 1, 3 # 1, 10
+            mn_row, mx_row = 6, 14
+            mn_col, mx_col = 5, 10
             count_rows = random.randint(mn_row, mx_row)
             count_cols = random.randint(mn_col, mx_col)
             # "Regular Seats"
