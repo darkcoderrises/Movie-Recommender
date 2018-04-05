@@ -1,1 +1,1 @@
-<a href="/theater/{{object.id}}">{{object.name}}</a>
+<button type="button" class="btn btn-secondary">Theater</button> <a href="/theater/{{object.id}}">{{object.name}}</a>

@@ -173,6 +173,7 @@ def user_home(request):
         similar = CB.top(movie, 10)
         similar_movies.extend(similar)
 
+    similar_movies = list(set(similar_movies))
     recommended = CF.top(request.user, 10)
     try:
         profile = UserProfile.objects.get(user=request.user)

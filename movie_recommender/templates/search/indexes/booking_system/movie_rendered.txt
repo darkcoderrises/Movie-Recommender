@@ -1,1 +1,1 @@
-<a href="/movie/{{object.id}}">{{object.title}}</a>
+<button type="button" class="btn btn-primary">Movie</button> <a href="/movie/{{object.id}}">{{object.title}}</a>

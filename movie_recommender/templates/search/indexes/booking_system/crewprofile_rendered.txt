@@ -1,1 +1,1 @@
-<a href="/crew/{{object.id}}">{{object.name}}</a>
+<button type="button" class="btn btn-success">Crew</button> <a href="/crew/{{object.id}}">{{object.name}}</a>

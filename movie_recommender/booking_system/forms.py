@@ -4,9 +4,13 @@ from crispy_forms.helper import FormHelper
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from crispy_forms.layout import Layout, ButtonHolder, Submit
+from django.contrib.auth.models import User
 
 
 class CustomUserCreationForm(UserCreationForm):
+
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -15,6 +19,10 @@ class CustomUserCreationForm(UserCreationForm):
         self.helper.form_method = 'post'
         self.helper.form_action = 'signup'
         self.helper.add_input(Submit('submit', 'Submit'))
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2', )
 
 
 class UpdateProfile(forms.ModelForm):
@@ -28,7 +36,7 @@ class UpdateProfile(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ["age", "gender", "phone", "genre_pref"]
+        fields = ["date", "gender", "phone", "genre_pref"]
 
 
 class UserProfileCreationForm(forms.ModelForm):
