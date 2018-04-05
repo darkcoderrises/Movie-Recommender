@@ -198,13 +198,13 @@ def running(request):
     from datetime import datetime
     shows = Show.objects.filter(show_time__date=datetime.today())
     movies = set([i.movie for i in shows])
-    return render_with_user(request, 'movies.html', {'movies': movies})
+    return render_with_user(request, 'movies.html', {'movies': movies, 'active': 'nearby'})
 
 
 def upcoming(request):
     # movies = Movie.objects.filter(release_date__gte=date.today())
     movies = Movie.objects.filter(release_date__gte=date(1995, 4, 1)) #testing
-    return render_with_user(request, 'movies.html', {'movies': movies})
+    return render_with_user(request, 'movies.html', {'movies': movies, 'active': 'upcoming'})
 
 
 def dummy_gateway(request):

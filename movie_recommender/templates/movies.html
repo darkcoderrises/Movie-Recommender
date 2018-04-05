@@ -8,4 +8,11 @@
 </div>
 {% endfor %}
 </div>
+
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#{{active}}').addClass("active");
+    });
+</script>
+
 {% endblock %}
