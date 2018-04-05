@@ -366,7 +366,7 @@ def booking_summary(request, booking_id):
 def similar_movies(movie_id):
     query = Movie.objects.get(id=movie_id)
     recommender = CBRecommender()
-    ordered = recommender.top(query)
+    ordered = recommender.top(query, 5)
     return ordered
 
 def movie(request, movie_id):

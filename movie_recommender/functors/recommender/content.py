@@ -14,7 +14,7 @@ class CBRecommender(BaseRecommender):
         movies = []
         for result in results:
             movies.append(result.similar_to)
-        n = min(len(movies, count))
+        n = min(len(movies),count)
         return movies[:n]
     
 
