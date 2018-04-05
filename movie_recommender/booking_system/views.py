@@ -51,7 +51,7 @@ def signup(request):
             user.save()
             user_profile = UserProfile.objects.create(user=user, gender=Gender.objects.all()[0])
             user_profile.save()
-            return redirect('index')
+            return redirect('/preferences')
     else:
         form = CustomUserCreationForm()
     return render_with_user(request, 'signup.html', {'form': form})
