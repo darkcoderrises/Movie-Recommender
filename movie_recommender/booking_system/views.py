@@ -233,7 +233,7 @@ def payment(request):
             Notifier().mail(request.user, "Booking Successful", """
                 Congratulations, your movie ticket for the movie {0} is successfully booked.
                 You can show the following link to see the movie {1}
-            """.format(booking.show.movie.title, '/booking_detail'+str(booking.id)))
+            """.format(booking.show.movie.title, settings.HOME_URL+'/booking_detail'+str(booking.id)))
             booker.invoice_success(booking)
         else:
             Notifier().mail(request.user, "Booking Unsuccessful", """
