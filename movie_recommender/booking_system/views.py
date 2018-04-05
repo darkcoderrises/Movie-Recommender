@@ -18,6 +18,7 @@ from django.contrib.auth.models import Group
 from collections import namedtuple
 from functors.notifier import Notifier
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 from datetime import date
 
@@ -139,7 +140,12 @@ def update_profile(request):
             form.save_m2m()
             return redirect('index')
     else:
-        form = UpdateProfile(initial=model_to_dict(request.user.userprofile))
+        try:
+            form = UpdateProfile(initial=model_to_dict(request.user.userprofile))
+        except ObjectDoesNotExist:
+            profile = UserProfile(user=request.user,
+                    gender=Gender.objects.all().first())
+            form = UpdateProfile(initial=model_to_dict(profile))
 
     args['form'] = form
     args['user'] = request.user
@@ -150,25 +156,24 @@ def user_home(request):
     CF = CFRecommender()
     PR = PopularRecommender()
     recommended = CF.top(request.user, 10)
-    profile = UserProfile.objects.get(user=request.user)
-    prefs = profile.genre_pref.all()
-    rows = []
-    def convert(dictionary):
-        return namedtuple('GenericDict', dictionary.keys())(**dictionary)
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        prefs = profile.genre_pref.all()
+        rows = []
+        def convert(dictionary):
+            return namedtuple('GenericDict', dictionary.keys())(**dictionary)
 
-    for pref in prefs:
-        row = PR.top_by_genre(pref.genre, 3)
-        _row = {'name': pref.genre, 'movies': row}
-        rows.append(convert(_row))
-    return render_with_user(request, 'user_home.html', {'genres': rows,
-        'recommended': recommended})
+        for pref in prefs:
+            row = PR.top_by_genre(pref.genre, 3)
+            _row = {'name': pref.genre, 'movies': row}
+            rows.append(convert(_row))
+        return render_with_user(request, 'user_home.html', {'genres': rows,
+            'recommended': recommended})
+    except ObjectDoesNotExist:
+        return anonymous_home(request)
 
 
-def home(request):
-    if request.user.is_authenticated:
-        return user_home(request)
-
-    # Setup things for home.
+def anonymous_home(request):
     from functors.recommender import PopularRecommender
     PR = PopularRecommender()
     worldwide = PR.top(10)
@@ -179,6 +184,14 @@ def home(request):
 
     return render(request, 'home.html', {'worldwide': worldwide, 'city':
         city})
+
+
+def home(request):
+    if request.user.is_authenticated:
+        return user_home(request)
+
+    # Setup things for home.
+    return anonymous_home(request)
 
 
 def show_movies(request):

@@ -161,5 +161,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'booker.system@gmail.com'
 EMAIL_HOST_PASSWORD = 'harshil158'
 
-HOME_URL = "http://localhost:8000"
+#HOME_URL = "http://0.0.0.0:8000"
+HOME_URL = "http://10.2.16.59:8000"
 LOGIN_URL = "/login"
