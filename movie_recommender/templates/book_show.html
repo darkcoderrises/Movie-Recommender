@@ -8,6 +8,10 @@
     </div>
   </div>
 
+  <div id="loading">
+    <div class="loader"></div>
+  </div>
+
   <div class="card" style="margin-left: 15px; margin-right: 15px;">
     <div class="card-header">
       {{show.show_time}}
@@ -46,7 +50,7 @@
 
     var add_seat = function(seat_id, a) {
       $.ajax({
-        url: "http://localhost:8000/add_seat/" + booking_id,
+        url: "{{home_url}}/add_seat/" + booking_id,
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
           seat_id: seat_id,
@@ -58,7 +62,7 @@
 
     var delete_seat = function(seat_id, a) {
       $.ajax({
-        url: "http://localhost:8000/delete_seat/" + booking_id,
+        url: "{{home_url}}/delete_seat/" + booking_id,
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
           seat_id: seat_id,
@@ -70,13 +74,14 @@
 
     $(window).on('load', function(){
       $.ajax({
-        url: "http://localhost:8000/start_booking/{{show.id}}",
+        url: "{{home_url}}/start_booking/{{show.id}}",
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function (result) {
           num_req -= 1;
           booking_id = result.booking.id;
+          $('#loading').hide();
           console.log("success start booking", booking_id);
         },
         error: function() {
@@ -86,8 +91,10 @@
       });
       num_req += 1;
 
-      $( ".selectable" ).each(function(index) {
+      $( ".selectable" ).each(function() {
         $(this).on("click", function(){
+            if (booking_id === -1)
+                return;
           if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             delete_seat($(this).attr('id'), $(this).attr('amount'));
@@ -104,7 +111,7 @@
         }
 
         $.ajax({
-          url: "http://localhost:8000/proceed",
+          url: "{{home_url}}/proceed",
           data: {
             csrfmiddlewaretoken: '{{ csrf_token }}',
             booking_id: booking_id,
@@ -112,7 +119,7 @@
           success: function(result) {
             confirmed = result.success;
             if (confirmed) {
-                window.location.href = "http://localhost:8000/booking_summary/" + booking_id;
+                window.location.href = "{{home_url}}/booking_summary/" + booking_id;
             } else {
                 alert('Something went wrong');
             }
@@ -131,7 +138,7 @@
       }
 
       $.ajax({
-        url: "http://localhost:8000/cancel_booking/" + booking_id,
+        url: "{{home_url}}/cancel_booking/" + booking_id,
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
           booking_id: booking_id

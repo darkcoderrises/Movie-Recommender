@@ -1,5 +1,5 @@
 from .models import *
-from .serializers import CrewSerializer, CrewProfile, MovieSerializer, Movie, Crew
+from .serializers import CrewProfile, Movie, Crew
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -17,9 +17,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from collections import namedtuple
 from functors.notifier import Notifier
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 from datetime import date
-from django.db.models import Count
 
 # Create your views here.
 
@@ -35,6 +36,7 @@ def environment(**options):
 
 def render_with_user(request, template_name, args):
     args['user'] = request.user
+    args['home_url'] = settings.HOME_URL
     return render(request, template_name, args)
 
 
@@ -50,7 +52,7 @@ def signup(request):
             user.save()
             user_profile = UserProfile.objects.create(user=user, gender=Gender.objects.all()[0])
             user_profile.save()
-            return redirect('index')
+            return redirect('/preferences')
     else:
         form = CustomUserCreationForm()
     return render_with_user(request, 'signup.html', {'form': form})
@@ -107,10 +109,21 @@ def rate(request, movie_id):
 
 @login_required
 def booking(request):
-    bookings = Booking.objects.filter(user=request.user)
-    booking_views = [render_to_string('booking_card.html',
-                                      get_booking_details(book_obj)) for book_obj in bookings]
-    return render_with_user(request, 'bookings.html', {'bookings': booking_views})
+    bookings = Booking.objects.filter(user=request.user).order_by('-show__show_time')
+    done_views = []
+    new_views = []
+
+    for book_obj in bookings:
+        if book_obj.show.show_time.date() < date(2018, 4, 2):
+            view = render_to_string('booking_card.html', get_booking_details(book_obj))
+            done_views.append(view)
+        else:
+            data = get_booking_details(book_obj)
+            data['hide'] = True
+            view = render_to_string('booking_card.html', data)
+            new_views.append(view)
+
+    return render_with_user(request, 'bookings.html', {'done_views': done_views, 'new_views': new_views})
 
 
 @login_required
@@ -124,10 +137,15 @@ def update_profile(request):
             p = form.save(commit=False)
             p.user = request.user
             p.save()
+            form.save_m2m()
             return redirect('index')
     else:
-        form = UpdateProfile(initial=model_to_dict(request.user.userprofile))
-        print(form)
+        try:
+            form = UpdateProfile(initial=model_to_dict(request.user.userprofile))
+        except ObjectDoesNotExist:
+            profile = UserProfile(user=request.user,
+                    gender=Gender.objects.all().first())
+            form = UpdateProfile(initial=model_to_dict(profile))
 
     args['form'] = form
     args['user'] = request.user
@@ -138,26 +156,24 @@ def user_home(request):
     CF = CFRecommender()
     PR = PopularRecommender()
     recommended = CF.top(request.user, 10)
-    profile = UserProfile.objects.get(user=request.user)
-    prefs = profile.genre_pref.all()
-    rows = []
-    def convert(dictionary):
-        return namedtuple('GenericDict', dictionary.keys())(**dictionary)
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        prefs = profile.genre_pref.all()
+        rows = []
+        def convert(dictionary):
+            return namedtuple('GenericDict', dictionary.keys())(**dictionary)
 
-    for pref in prefs:
-        row = PR.top_by_genre(pref.genre, 3)
-        _row = {'name': pref.genre, 'movies': row}
-        rows.append(convert(_row))
-    return render_with_user(request, 'user_home.html', {'genres': rows,
-        'recommended': recommended})
+        for pref in prefs:
+            row = PR.top_by_genre(pref.genre, 3)
+            _row = {'name': pref.genre, 'movies': row}
+            rows.append(convert(_row))
+        return render_with_user(request, 'user_home.html', {'genres': rows,
+            'recommended': recommended})
+    except ObjectDoesNotExist:
+        return anonymous_home(request)
 
 
-
-def home(request):
-    if request.user.is_authenticated:
-        return user_home(request)
-
-    # Setup things for home.
+def anonymous_home(request):
     from functors.recommender import PopularRecommender
     PR = PopularRecommender()
     worldwide = PR.top(10)
@@ -168,6 +184,14 @@ def home(request):
 
     return render(request, 'home.html', {'worldwide': worldwide, 'city':
         city})
+
+
+def home(request):
+    if request.user.is_authenticated:
+        return user_home(request)
+
+    # Setup things for home.
+    return anonymous_home(request)
 
 
 def show_movies(request):
@@ -184,20 +208,22 @@ def show_cast(request):
 
 
 def running(request):
-    return HttpResponseNotFound('<h1>Page under construction?</h1>')
+    from datetime import datetime
+    shows = Show.objects.filter(show_time__date=datetime.today())
+    movies = set([i.movie for i in shows])
+    return render_with_user(request, 'movies.html', {'movies': movies, 'active': 'nearby'})
 
 
 def upcoming(request):
     # movies = Movie.objects.filter(release_date__gte=date.today())
     movies = Movie.objects.filter(release_date__gte=date(1995, 4, 1)) #testing
-    # print(movies)
-    return render_with_user(request, 'movies.html', {'movies': movies})
+    return render_with_user(request, 'movies.html', {'movies': movies, 'active': 'upcoming'})
 
 
 def dummy_gateway(request):
     amount = request.GET.get('amount', 0)
     id = request.GET.get('id', 0)
-    hit_url = request.GET.get('hit_url', 'http://localhost:8000/payment')
+    hit_url = request.GET.get('hit_url', settings.HOME_URL + '/payment')
 
     return render(request, 'dummy_gateway.html', {'amount': amount, 'id': id, 'hit_url': hit_url})
 
@@ -232,7 +258,7 @@ def payment(request):
             Notifier().mail(request.user, "Booking Successful", """
                 Congratulations, your movie ticket for the movie {0} is successfully booked.
                 You can show the following link to see the movie {1}
-            """.format(booking.show.movie.title, '/booking_detail'+str(booking.id)))
+            """.format(booking.show.movie.title, settings.HOME_URL+'/booking_detail/'+str(booking.id)))
             booker.invoice_success(booking)
         else:
             Notifier().mail(request.user, "Booking Unsuccessful", """
@@ -247,6 +273,7 @@ def payment(request):
         return redirect('index')
 
 
+@login_required
 def book_show(request, show_id):
     booker = Booker()
     show = Show.objects.get(pk=show_id)
@@ -293,13 +320,13 @@ def cancel_booking(request, booking_id):
 
 def add_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
-    Booker.select(booking_id, seat_id, request.user.userprofile.id)
+    Booker.select(booking_id, seat_id, request.user.id)
     return JsonResponse({})
 
 
 def delete_seat(request, booking_id):
     seat_id = request.GET.get('seat_id')
-    Booker.deselect(booking_id, seat_id, request.user.userprofile.id)
+    Booker.deselect(booking_id, seat_id, request.user.id)
     return JsonResponse({})
 
 
@@ -416,9 +443,11 @@ def shows(request, movie_id):
 def review(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
     reviews = Review.objects.filter(movie=movie_id)
-    return render_with_user(request, 'review.html', {"reviews": reviews, "movie" : movie})
+    return render_with_user(request, 'review.html', {"reviews": reviews, "movie": movie})
 
 
 def user_review(request):
-    reviews = Review.objects.filter(user=request.user.id)
+    # print(request.user.id)
+    # reviews = Review.objects.filter(user=19)#request.user.id)
+    reviews = Review.objects.filter(user=request.user)
     return render_with_user(request, 'user_review.html', {"reviews": reviews})

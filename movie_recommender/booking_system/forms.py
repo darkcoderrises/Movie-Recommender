@@ -19,7 +19,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 class UpdateProfile(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(UpdateProfile, self).__init__(*args, *kwargs)
+        super(UpdateProfile, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
 
         self.helper.form_method = "post"

@@ -1,9 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for booking in bookings %}
-        {{booking}}
-    {% endfor %}
+    <nav id="mytab">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#upcoming" role="tab" aria-controls="nav-upcoming" aria-selected="true">Upcoming</a>
+            <a class="nav-item nav-link active" data-toggle="tab" href="#past" role="tab" aria-controls="nav-past" aria-selected="false">Past</a>
+        </div>
+    </nav>
+
+    <div class="tab-content" id="nav-tabContent">
+      <div id="upcoming" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-upcoming-tab">
+          {% for booking in new_views %}
+            {{booking}}
+          {% endfor %}
+      </div>
+      <div id="past" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-past-tab">
+          {% for booking in done_views %}
+            {{booking}}
+          {% endfor %}
+      </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function() {
+            $('#mytab a[href="#upcoming"]').on('click', function (e) {
+                e.preventDefault()
+                $('#upcoming').show();
+                $('#past').hide();
+            });
+
+            $('#mytab a[href="#past"]').on('click', function (e) {
+                e.preventDefault()
+                $('#upcoming').hide();
+                $('#past').show();
+            });
+
+            $('#past').hide();
+        });
+    </script>
 {% endblock %}
 
 {% block title %}

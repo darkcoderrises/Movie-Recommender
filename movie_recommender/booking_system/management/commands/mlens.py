@@ -151,6 +151,8 @@ class Command(BaseCommand):
         mid = rating['movieId'].astype(int)
         movie = self.get(M.Movie, id=mid)
         user = self.get(M.UserProfile, id=uid)
+        user_obj.set_password('letmein')
+        user_obj.save()
         _rating = self.get(M.Review, user=user, movie=movie, 
                 rating=rating["rating"])
         print(uid, mid, rating["rating"]) 
