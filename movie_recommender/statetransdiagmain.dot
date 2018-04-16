@@ -1,0 +1,30 @@
+digraph G {
+
+	rankdir="TB";
+    START->display_details_and_shows[label="select_movie"];
+    display_details_and_shows->pick_seats[label="select_show"];
+    pick_seats->payment_gateway[label="select_seat"];
+	payment_gateway->pick_seats[label="failed_transaction"];
+	display_ticket->payment_gateway[label="successful_transaction", dir=back];
+    END-> display_ticket[label="finish", dir=back];
+	START->results[label="search"];
+    results->display_details_and_shows[label="select_movie"];
+
+    {
+    	rank=same;
+    	payment_gateway[label="Payment\nGateway"];
+    	pick_seats[label="Pick Seats"];
+    }
+	{
+		display_details_and_shows[label="Display Movies Details\n And Shows"];
+		display_ticket[label="Display Ticket"];
+		results[label="Results"];
+	}
+    {
+    	rank=same;
+    	END;
+    	START;
+    }
+
+
+}
