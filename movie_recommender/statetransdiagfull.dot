@@ -1,0 +1,35 @@
+digraph G {
+
+    START->user_dashboard [label="login_or_register_as_user"];
+    START->list_movie_details_and_shows[label="select_a_movie"];
+    list_movie_details_and_shows->list_seats[label="select_a_show"];
+    list_seats->payment_gateway[label="select_a_seat"];
+	payment_gateway->list_seats[label="failed_transaction"];
+	payment_gateway->display_ticket[label="successful_transaction"];
+    display_ticket->END[label="finish"];
+	
+	user_dashboard->list_movie_details_and_shows[label="select_a_movie"];
+
+    user_dashboard->profile_update[label="select_profile"];
+    user_dashboard->show_booking_history[label="select_booking_history"];  
+    show_booking_history->rate_a_movie[label="select_a_movie"];
+
+    START->show_search_results[label="search_a_movie"];
+    show_search_results->list_movie_details_and_shows[label="select_a_movie"];
+ 	rate_a_movie->END[label="logout"];
+ 	profile_update->END[label="logout"];
+    user_dashboard->END[label="logout"];
+
+//admin
+
+	START->admin_dashboard[label="login_or_register_as_admin"];
+	admin_dashboard->edit_or_delete_movie[label="select_a_movie"];
+	admin_dashboard->edit_or_delete_show[label="select_a_show"];
+	admin_dashboard->edit_or_delete_theater[label="select_a_theater"];
+	admin_dashboard->add_info[label="select_a_category"];
+	add_info->END[label="logout"];
+	edit_or_delete_movie->END[label="logout"];
+	edit_or_delete_show->END[label="logout"];
+	edit_or_delete_theater->END[label="logout"];
+
+}
